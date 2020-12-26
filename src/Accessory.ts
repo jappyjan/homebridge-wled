@@ -23,6 +23,7 @@ export interface Device {
  */
 export class Accessory {
   private speakerService?: Service;
+  private tvService?: Service;
   private device: Device;
   private axios: AxiosInstance;
 
@@ -48,8 +49,14 @@ export class Accessory {
   configureSpeakerService() {
     this.platform.log.info('Adding speaker service');
     this.speakerService =
-      this.accessory.getService(this.platform.Service.Speaker) ||
-      this.accessory.addService(this.platform.Service.Speaker);
+      this.accessory.getService(this.platform.Service.TelevisionSpeaker) ||
+      this.accessory.addService(this.platform.Service.TelevisionSpeaker);
+
+    this.tvService =
+      this.accessory.getService(this.platform.Service.Television) ||
+      this.accessory.addService(this.platform.Service.Television);
+
+    this.tvService.addLinkedService(this.speakerService);
 
     // set the volume control type
     this.speakerService
