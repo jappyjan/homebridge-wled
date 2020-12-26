@@ -70,29 +70,34 @@ export class Accessory {
       return;
     }
 
+
     this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
 
     const response = await Axios.get(this.baseURL);
 
-    const ALLOWED_EFFECT_COUNT = 90;
+    const ALLOWED_EFFECT_COUNT = 5;
     response.data.effects.forEach((name, index) => {
       if (index > ALLOWED_EFFECT_COUNT) {
         return;
       }
 
-      const inputSourceService = this.accessory.addService(
-        this.platform.Service.InputSource,
-        `effect-${index}`,
-        name,
+      const identifier = index;
+
+      const inputSourceService = new this.platform.Service.InputSource(
+        'Effekt',
+        `effect_${identifier}`,
       );
 
       inputSourceService
-        .setCharacteristic(this.platform.Characteristic.Identifier, index)
         .setCharacteristic(this.platform.Characteristic.ConfiguredName, name)
+        .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.OTHER)
         .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
-        .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.HDMI);
+        .setCharacteristic(this.platform.Characteristic.Name, name)
+        .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN)
+        .setCharacteristic(this.platform.Characteristic.Identifier, identifier);
+
       this.televisionService!.addLinkedService(inputSourceService); // link to tv service
-    });
+    }
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
