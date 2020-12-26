@@ -154,15 +154,13 @@ export class Accessory {
   ): Promise<void> {
     this.platform.log.info('setPower called with: ' + value);
 
+    callback(null);
     try {
       await Axios.post(this.baseURL, {
         on: value,
       });
-
-      callback(null);
     } catch (e) {
       this.platform.log.error(e);
-      callback(e);
     }
   }
 
