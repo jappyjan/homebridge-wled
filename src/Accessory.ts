@@ -116,31 +116,45 @@ export class Accessory {
       availableInputServices.push(dummyInputSource);
     }
 
-    Axios.get(this.baseURL)
-      .then(response => {
-        if (!response.data || !response.data.effects) {
-          this.platform.log.error('Effects missing from response', response);
+    const setEffectNames = (effects: string[]) => {
+      effects.forEach((effectName, index) => {
+        const service = availableInputServices.shift();
+
+        if (!service) {
+          this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
           return;
         }
 
-        response.data.effects.forEach((effectName, index) => {
-          const service = availableInputServices.shift();
+        service
+          .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
+          .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
+          .setCharacteristic(
+            this.platform.Characteristic.CurrentVisibilityState,
+            this.platform.Characteristic.CurrentVisibilityState.SHOWN,
+          );
+      });
+    }
 
-          if (!service) {
-            this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
-            return;
+    let fetchCount = 0;
+    const fetchEffects = () => {
+      fetchCount++;
+
+      return Axios.get(this.baseURL)
+        .then(response => {
+          if (!response.data || !response.data.effects) {
+            if (fetchCount < 10) {
+              return fetchEffects();
+            }
+
+            this.platform.log.error('Could not load effect names', response);
+            return [];
           }
 
-          service
-            .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
-            .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
-            .setCharacteristic(
-              this.platform.Characteristic.CurrentVisibilityState,
-              this.platform.Characteristic.CurrentVisibilityState.SHOWN,
-            );
+          return response.data.effects;
         });
-      })
-      .catch(e => this.platform.log.error('Failed to set effect names to input sources', e));
+    };
+
+    fetchEffects().then(effects => setEffectNames(effects));
   }
 
   configureSpeakerService() {
