@@ -1,7 +1,7 @@
 {
   "displayName": "http wled",
   "name": "@jappyjan/homebridge-wled",
-  "version": "1.2.30",
+  "version": "1.2.31",
   "description": "It Controls a WLED Controllers",
   "license": "Apache-2.0",
   "repository": {
