@@ -143,7 +143,11 @@ export class Accessory {
         .then(response => {
           if (!response.data || !response.data.effects) {
             if (fetchCount < 10) {
-              return fetchEffects();
+              return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  fetchEffects().then((resolve)).catch((e) => reject(e));
+                }, 500);
+              });
             }
 
             this.platform.log.error('Could not load effect names', response);
