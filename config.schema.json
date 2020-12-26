@@ -8,7 +8,7 @@
       "devices": {
         "type": "array",
         "items": {
-          "title": "ESP8266 Remotes",
+          "title": "WLED Devices",
           "type": "object",
           "properties": {
             "name": {

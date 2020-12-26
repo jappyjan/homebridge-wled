@@ -68,6 +68,11 @@ export class Accessory {
       .on('get', this.getPower.bind(this));
 
     this.speakerService
+      .getCharacteristic(this.platform.Characteristic.Mute)
+      .on('set', this.setPower.bind(this))
+      .on('get', this.getPower.bind(this));
+
+    this.speakerService
       .getCharacteristic(this.platform.Characteristic.VolumeSelector)
       .on('set', this.setVolume.bind(this));
   }
