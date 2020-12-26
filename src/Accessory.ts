@@ -60,7 +60,7 @@ export class Accessory {
       .setCharacteristic(
         this.platform.Characteristic.VolumeControlType,
         this.platform.Characteristic.VolumeControlType.ABSOLUTE,
-      )
+      );
 
     this.speakerService
       .getCharacteristic(this.platform.Characteristic.Active)
