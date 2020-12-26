@@ -22,7 +22,7 @@ export declare class Accessory {
     configureSpeakerService(): void;
     setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     getPower(callback: CharacteristicGetCallback): Promise<void>;
-    setVolume(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
+    onVolumeChange(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     onRemoteKeyPress(remoteKey: unknown, callback: CharacteristicSetCallback): Promise<void>;
     setEffect(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
 }

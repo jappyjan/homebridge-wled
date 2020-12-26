@@ -115,7 +115,7 @@ class Accessory {
             .setCharacteristic(this.platform.Characteristic.VolumeControlType, this.platform.Characteristic.VolumeControlType.ABSOLUTE);
         this.speakerService
             .getCharacteristic(this.platform.Characteristic.VolumeSelector)
-            .on('set', this.setVolume.bind(this));
+            .on('set', this.onVolumeChange.bind(this));
         this.televisionService.addLinkedService(this.speakerService);
     }
     async setPower(value, callback) {
@@ -141,8 +141,8 @@ class Accessory {
             callback(e);
         }
     }
-    async setVolume(value, callback) {
-        const brightness = 255 * (100 / value);
+    async onVolumeChange(value, callback) {
+        const brightness = value;
         this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
         try {
             await axios_1.default.post(this.baseURL, {

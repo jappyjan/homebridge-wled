@@ -1,7 +1,7 @@
 import {API, Categories, Characteristic, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service} from 'homebridge';
 
 import {PLATFORM_NAME, PLUGIN_NAME} from './settings';
-import {Accessory, Device} from './Accessory';
+import {TVAccessory, Device} from './TVAccessory';
 
 export class Plugin implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -78,7 +78,7 @@ export class Plugin implements DynamicPlatformPlugin {
 
     // create the accessory handler for the newly create accessory
     // this is imported from `platformAccessory.ts`
-    new Accessory(this, accessory);
+    new TVAccessory(this, accessory);
 
     // link the accessory to your platform
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

@@ -20,7 +20,7 @@ export interface Device {
  * An instance of this class is created for each accessory your platform registers
  * Each accessory may expose multiple services of different service types.
  */
-export class Accessory {
+export class TVAccessory {
   private speakerService?: Service;
   private televisionService?: Service;
   private readonly device: Device;
@@ -34,16 +34,16 @@ export class Accessory {
 
     this.device = accessory.context.device;
 
-    this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
+    this.platform.log.info(`Adding Television Device ${this.device.name}`, this.device);
 
     this.baseURL = `http://${this.device.ip}/json`;
 
-    this.platform.log.info(`Device ${this.device.name} Base URL: ${this.baseURL}`);
+    this.platform.log.info(`Television Device with ${this.device.name} Base URL: ${this.baseURL}`);
 
-    this.configureTelevisionService();
+    this.initializeService();
   }
 
-  configureTelevisionService() {
+  initializeService() {
     this.platform.log.info('Adding Television service');
 
     this.televisionService =
@@ -54,13 +54,8 @@ export class Accessory {
 
     Axios.get(this.baseURL).then(response => {
       this.televisionService!
-        .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name)
-        .setCharacteristic(this.platform.Characteristic.Active, response.data.state.on ? 1 : 0);
+        .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name);
     }).catch(e => this.platform.log.error('Failed to set Name and initial active state', e));
-
-    this.televisionService
-      .getCharacteristic(this.platform.Characteristic.RemoteKey)
-      .on('set', this.onRemoteKeyPress.bind(this));
 
     this.televisionService.setCharacteristic(
       this.platform.Characteristic.SleepDiscoveryMode,
@@ -68,13 +63,6 @@ export class Accessory {
     );
 
     this.configureInputSources();
-
-    this.televisionService
-      .getCharacteristic(this.platform.Characteristic.Active)
-      .on('set', this.setPower.bind(this))
-      .on('get', this.getPower.bind(this));
-
-    this.configureSpeakerService();
   }
 
   configureInputSources() {
@@ -159,78 +147,6 @@ export class Accessory {
     };
 
     fetchEffects().then(effects => setEffectNames(effects));
-  }
-
-  configureSpeakerService() {
-    this.platform.log.info('Adding speaker service');
-    this.speakerService =
-      this.accessory.getService(this.platform.Service.TelevisionSpeaker) ||
-      this.accessory.addService(this.platform.Service.TelevisionSpeaker);
-
-    // set the volume control type
-    this.speakerService
-      .setCharacteristic(
-        this.platform.Characteristic.VolumeControlType,
-        this.platform.Characteristic.VolumeControlType.ABSOLUTE,
-      );
-
-    this.speakerService
-      .getCharacteristic(this.platform.Characteristic.VolumeSelector)
-      .on('set', this.onVolumeChange.bind(this));
-
-    this.televisionService!.addLinkedService(this.speakerService);
-  }
-
-  async setPower(
-    value: CharacteristicValue,
-    callback: CharacteristicSetCallback,
-  ): Promise<void> {
-    this.platform.log.info('setPower called with: ' + value);
-
-    callback(null);
-    try {
-      await Axios.post(this.baseURL, {
-        on: value === 1,
-      });
-    } catch (e) {
-      this.platform.log.error(e);
-    }
-  }
-
-  async getPower(
-    callback: CharacteristicGetCallback,
-  ): Promise<void> {
-    this.platform.log.info('getPower called');
-
-    try {
-      const response = await Axios.get(this.baseURL);
-      callback(null, response.data.state.on);
-    } catch (e) {
-      this.platform.log.error(e);
-      callback(e);
-    }
-  }
-
-  async onVolumeChange(
-    value: CharacteristicValue,
-    callback: CharacteristicSetCallback,
-  ): Promise<void> {
-    const brightness = value as number;
-    this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
-
-    try {
-      await Axios.post(this.baseURL, {
-        bri: brightness,
-      });
-      callback(null);
-    } catch (e) {
-      this.platform.log.error(e);
-      callback(e);
-    }
-  }
-
-  async onRemoteKeyPress(remoteKey: unknown, callback: CharacteristicSetCallback) {
-    callback(null);
   }
 
   async setEffect(value: CharacteristicValue, callback: CharacteristicSetCallback) {
