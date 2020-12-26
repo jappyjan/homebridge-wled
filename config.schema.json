@@ -1,0 +1,37 @@
+{
+  "pluginAlias": "HTTP-IR-TV",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "devices": {
+        "type": "array",
+        "items": {
+          "title": "ESP8266 Remotes",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true,
+              "default": "WLED"
+            },
+            "ip": {
+              "title": "WLED IP-Address/Hostname",
+              "type": "string",
+              "required": true,
+              "format": "hostname"
+            },
+            "port": {
+              "title": "WLED Port",
+              "type": "number",
+              "required": true,
+              "default": 80
+            }
+          }
+        }
+      }
+    }
+  }
+}
