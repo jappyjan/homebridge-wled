@@ -27,7 +27,7 @@
               "title": "Effects (Numeric) you want to use (upto 45) comma separated",
               "type": "string",
               "required": true,
-              "pattern": "^\\d*,?$"
+              "pattern": "^[\\d*,?]*$"
             }
           }
         }
