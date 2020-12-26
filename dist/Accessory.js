@@ -40,7 +40,7 @@ class Accessory {
             return;
         }
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
-        const response = await axios_1.default.get(this.baseURL + '/json');
+        const response = await axios_1.default.get(this.baseURL);
         response.data.effects.forEach((name, index) => {
             const inputSourceService = this.accessory.addService(this.platform.Service.InputSource, `effect-${index}`, name);
             inputSourceService

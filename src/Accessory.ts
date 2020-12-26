@@ -9,6 +9,7 @@ import {
 
 import {Plugin} from './Plugin';
 import Axios from 'axios';
+import {ALL} from 'dns';
 
 export interface Device {
   'name': string;
@@ -74,7 +75,12 @@ export class Accessory {
 
     const response = await Axios.get(this.baseURL);
 
+    const ALLOWED_EFFECT_COUNT = 90;
     response.data.effects.forEach((name, index) => {
+      if (index > ALLOWED_EFFECT_COUNT) {
+        return;
+      }
+
       const inputSourceService = this.accessory.addService(
         this.platform.Service.InputSource,
         `effect-${index}`,
