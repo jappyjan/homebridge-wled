@@ -40,10 +40,11 @@ class Accessory {
             return;
         }
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
-        for (let effectIndex = 0; effectIndex < 100; effectIndex++) {
+        const AVAILABLE_EFFECTS = 113;
+        for (let effectIndex = 1; effectIndex <= AVAILABLE_EFFECTS; effectIndex++) {
             const inputSourceService = this.accessory.addService(this.platform.Service.InputSource, `effect-${effectIndex}`, `Effekt ${effectIndex}`);
             inputSourceService
-                .setCharacteristic(this.platform.Characteristic.Identifier, 1)
+                .setCharacteristic(this.platform.Characteristic.Identifier, effectIndex)
                 .setCharacteristic(this.platform.Characteristic.ConfiguredName, `Effekt ${effectIndex}`)
                 .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
                 .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.HDMI);
