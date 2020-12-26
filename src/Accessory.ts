@@ -45,6 +45,7 @@ export class Accessory {
 
   configureTelevisionService() {
     this.platform.log.info('Adding Television service');
+
     this.televisionService =
       this.accessory.getService(this.platform.Service.Television) ||
       this.accessory.addService(this.platform.Service.Television);
@@ -55,7 +56,7 @@ export class Accessory {
       this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE,
     );
 
-    this.configureInputSources().catch(e => this.platform.log.error(e));
+    this.configureInputSources();
 
     this.televisionService
       .getCharacteristic(this.platform.Characteristic.Active)
@@ -65,39 +66,12 @@ export class Accessory {
     this.configureSpeakerService();
   }
 
-  async configureInputSources() {
+  configureInputSources() {
     if (!this.televisionService) {
       return;
     }
 
-
     this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
-
-    const response = await Axios.get(this.baseURL);
-
-    const ALLOWED_EFFECT_COUNT = 5;
-    response.data.effects.forEach((name, index) => {
-      if (index > ALLOWED_EFFECT_COUNT) {
-        return;
-      }
-
-      const identifier = index;
-
-      const inputSourceService = new this.platform.Service.InputSource(
-        'Effekt',
-        `effect_${identifier}`,
-      );
-
-      inputSourceService
-        .setCharacteristic(this.platform.Characteristic.ConfiguredName, name)
-        .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.OTHER)
-        .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
-        .setCharacteristic(this.platform.Characteristic.Name, name)
-        .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN)
-        .setCharacteristic(this.platform.Characteristic.Identifier, identifier);
-
-      this.televisionService!.addLinkedService(inputSourceService); // link to tv service
-    });
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
@@ -109,6 +83,25 @@ export class Accessory {
         this.platform.log.info('set Active Identifier => setNewValue: ' + newValue);
         callback(null);
       });
+
+
+    const INPUT_SOURCES_LIMIT = 45;
+    // create dummy inputs
+    for (let i = 0; i < INPUT_SOURCES_LIMIT; i++) {
+      const inputId = i;
+
+      const dummyInputSource = new this.platform.Service.InputSource('dummy', `input_${inputId}`);
+      dummyInputSource
+        .setCharacteristic(this.platform.Characteristic.Identifier, inputId)
+        .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'dummy')
+        .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.NOT_CONFIGURED)
+        .setCharacteristic(this.platform.Characteristic.TargetVisibilityState, this.platform.Characteristic.TargetVisibilityState.HIDDEN)
+        .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.HIDDEN);
+
+      // add the new dummy input source service to the tv accessory
+      this.televisionService.addLinkedService(dummyInputSource);
+      this.accessory.addService(dummyInputSource);
+    }
   }
 
   configureSpeakerService() {

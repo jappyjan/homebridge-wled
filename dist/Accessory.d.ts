@@ -18,7 +18,7 @@ export declare class Accessory {
     private baseURL;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     configureTelevisionService(): void;
-    configureInputSources(): Promise<void>;
+    configureInputSources(): void;
     configureSpeakerService(): void;
     setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     getPower(callback: CharacteristicGetCallback): Promise<void>;

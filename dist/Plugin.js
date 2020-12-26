@@ -51,23 +51,11 @@ class Plugin {
             // see if an accessory with the same uuid has already been registered and restored from
             // the cached devices we stored in the `configureAccessory` method above
             const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
-            if (existingAccessory && !device) {
+            if (existingAccessory) {
                 // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
                 // remove platform accessories when no longer present
                 this.api.unregisterPlatformAccessories(settings_1.PLUGIN_NAME, settings_1.PLATFORM_NAME, [existingAccessory]);
                 this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-                return;
-            }
-            if (existingAccessory) {
-                this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
-                // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-                // existingAccessory.context.device = device;
-                // this.api.updatePlatformAccessories([existingAccessory]);
-                // create the accessory handler for the restored accessory
-                // this is imported from `platformAccessory.ts`
-                new Accessory_1.Accessory(this, existingAccessory);
-                // update accessory cache with any changes to the accessory details and information
-                this.api.updatePlatformAccessories([existingAccessory]);
                 return;
             }
             // the accessory does not yet exist, so we need to create it
