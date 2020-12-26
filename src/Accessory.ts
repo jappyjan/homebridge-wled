@@ -8,7 +8,7 @@ import {
 } from 'homebridge';
 
 import {Plugin} from './Plugin';
-import Axios, {AxiosInstance} from 'axios';
+import Axios from 'axios';
 
 export interface Device {
   'name': string;
