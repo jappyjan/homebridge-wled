@@ -13,7 +13,6 @@ import Axios from 'axios';
 export interface Device {
   'name': string;
   'ip': string;
-  'port': number;
 }
 
 /**
@@ -40,7 +39,7 @@ export class Accessory {
 
     this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
 
-    this.baseURL = `${this.device.ip}:${this.device.port}/json`;
+    this.baseURL = `${this.device.ip}/json`;
 
     this.platform.log.info(`Device ${this.device.name} Base URL: ${this.baseURL}`);
 

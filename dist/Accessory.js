@@ -20,11 +20,8 @@ class Accessory {
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
-        const baseURL = `${this.device.ip}:${this.device.port}`;
-        this.platform.log.info(`Device ${this.device.name} Base URL: ${baseURL}`);
-        this.axios = axios_1.default.create({
-            baseURL,
-        });
+        this.baseURL = `${this.device.ip}:${this.device.port}/json`;
+        this.platform.log.info(`Device ${this.device.name} Base URL: ${this.baseURL}`);
         this.configureSpeakerService();
     }
     configureSpeakerService() {
@@ -51,7 +48,7 @@ class Accessory {
     async setPower(value, callback) {
         this.platform.log.info('setPower called with: ' + value);
         try {
-            await this.axios.post('/json', {
+            await axios_1.default.post(this.baseURL, {
                 on: value,
             });
             this.state.mute = !this.state.mute;
@@ -65,7 +62,7 @@ class Accessory {
     async getPower(callback) {
         this.platform.log.info('getPower called');
         try {
-            const response = await this.axios.get('/json');
+            const response = await axios_1.default.get(this.baseURL);
             callback(null, response.data.state.on);
         }
         catch (e) {
@@ -77,7 +74,7 @@ class Accessory {
         const brightness = 255 * (100 / value);
         this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
         try {
-            await this.axios.post('/json', {
+            await axios_1.default.post(this.baseURL, {
                 bri: brightness,
             });
             callback(null);

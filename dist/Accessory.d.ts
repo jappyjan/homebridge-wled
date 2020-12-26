@@ -15,7 +15,7 @@ export declare class Accessory {
     private readonly accessory;
     private speakerService?;
     private device;
-    private axios;
+    private baseURL;
     private state;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     configureSpeakerService(): void;

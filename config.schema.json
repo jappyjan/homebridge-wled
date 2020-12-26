@@ -22,12 +22,6 @@
               "type": "string",
               "required": true,
               "format": "hostname"
-            },
-            "port": {
-              "title": "WLED Port",
-              "type": "number",
-              "required": true,
-              "default": 80
             }
           }
         }
