@@ -44,7 +44,7 @@ export class Accessory {
   }
 
   configureTelevisionService() {
-    this.platform.log.info('Adding Televion service');
+    this.platform.log.info('Adding Television service');
     this.televisionService =
       this.accessory.getService(this.platform.Service.Television) ||
       this.accessory.addService(this.platform.Service.Television);
@@ -55,7 +55,7 @@ export class Accessory {
       this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE,
     );
 
-    this.configureInputSources();
+    this.configureInputSources().catch(e => this.platform.log.error(e));
 
     this.televisionService
       .getCharacteristic(this.platform.Characteristic.Active)

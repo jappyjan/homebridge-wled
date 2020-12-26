@@ -35,21 +35,21 @@ class Accessory {
             .on('get', this.getPower.bind(this));
         this.configureSpeakerService();
     }
-    configureInputSources() {
+    async configureInputSources() {
         if (!this.televisionService) {
             return;
         }
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
-        const AVAILABLE_EFFECTS = 113;
-        for (let effectIndex = 1; effectIndex <= AVAILABLE_EFFECTS; effectIndex++) {
-            const inputSourceService = this.accessory.addService(this.platform.Service.InputSource, `effect-${effectIndex}`, `Effekt ${effectIndex}`);
+        const response = await axios_1.default.get(this.baseURL + '/json');
+        response.data.effects.forEach((name, index) => {
+            const inputSourceService = this.accessory.addService(this.platform.Service.InputSource, `effect-${index}`, name);
             inputSourceService
-                .setCharacteristic(this.platform.Characteristic.Identifier, effectIndex)
-                .setCharacteristic(this.platform.Characteristic.ConfiguredName, `Effekt ${effectIndex}`)
+                .setCharacteristic(this.platform.Characteristic.Identifier, index)
+                .setCharacteristic(this.platform.Characteristic.ConfiguredName, name)
                 .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
                 .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.HDMI);
             this.televisionService.addLinkedService(inputSourceService); // link to tv service
-        }
+        });
         // handle input source changes
         this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
             .on('set', (newValue, callback) => {
