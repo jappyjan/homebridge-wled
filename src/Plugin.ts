@@ -51,7 +51,7 @@ export class Plugin implements DynamicPlatformPlugin {
     const devices: Device[] = this.config.devices as Device[];
 
     this.accessories.forEach(accessory => {
-      const device = devices.find(d => this.getUid(device) === accessory.UUID);
+      const device = devices.find(d => this.getUid(d) === accessory.UUID);
 
       if (!device) {
         // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
