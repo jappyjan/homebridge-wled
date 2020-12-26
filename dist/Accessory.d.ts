@@ -24,5 +24,6 @@ export declare class Accessory {
     getPower(callback: CharacteristicGetCallback): Promise<void>;
     setVolume(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     onRemoteKeyPress(remoteKey: unknown, callback: CharacteristicSetCallback): Promise<void>;
+    setEffect(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
 }
 //# sourceMappingURL=Accessory.d.ts.map

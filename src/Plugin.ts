@@ -45,51 +45,12 @@ export class Plugin implements DynamicPlatformPlugin {
    * must not be registered again to prevent "duplicate UUID" errors.
    */
   discoverDevices() {
-    // EXAMPLE ONLY
-    // A real plugin you would discover accessories from the local network, cloud services
-    // or a user-defined array in the platform config.
-    const devices: Device[] = this.config.devices as Device[];
-
     this.accessories.forEach(accessory => {
-      const device = devices.find(d => this.getUid(d) === accessory.UUID);
-
-      if (!device) {
-        // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
-        // remove platform accessories when no longer present
-        this.log.info('Removing existing accessory from cache:', accessory.displayName);
-        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-
-        return;
-      }
+      this.removeAccessory(accessory);
     });
 
-    // loop over the discovered devices and register each one if it has not already been registered
+    const devices: Device[] = this.config.devices as Device[];
     for (const device of devices) {
-      // generate a unique id for the accessory this should be generated from
-      // something globally unique, but constant, for example, the device serial
-      // number or MAC address
-      const uuid = this.getUid(device);
-
-      // see if an accessory with the same uuid has already been registered and restored from
-      // the cached devices we stored in the `configureAccessory` method above
-      const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
-
-      if (existingAccessory) {
-        this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
-
-        // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-        // existingAccessory.context.device = device;
-        // this.api.updatePlatformAccessories([existingAccessory]);
-
-        // create the accessory handler for the restored accessory
-        // this is imported from `platformAccessory.ts`
-        new Accessory(this, existingAccessory);
-
-        // update accessory cache with any changes to the accessory details and information
-        this.api.updatePlatformAccessories([existingAccessory]);
-        return;
-      }
-
       this.addAccessory(device);
     }
   }
