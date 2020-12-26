@@ -97,7 +97,7 @@ export class Accessory {
         .setCharacteristic(this.platform.Characteristic.Identifier, identifier);
 
       this.televisionService!.addLinkedService(inputSourceService); // link to tv service
-    }
+    });
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
