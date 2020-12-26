@@ -14,6 +14,7 @@ export declare class Accessory {
     private readonly platform;
     private readonly accessory;
     private speakerService?;
+    private tvService?;
     private device;
     private axios;
     private state;

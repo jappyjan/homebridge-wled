@@ -39,8 +39,10 @@ export class Accessory {
 
     this.device = accessory.context.device;
 
+    this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
+
     this.axios = Axios.create({
-      baseURL: `${this.device.ip}:${this.device.port}/json`,
+      baseURL: `${this.device.ip}:${this.device.port}`,
     });
 
     this.configureSpeakerService();
@@ -91,7 +93,7 @@ export class Accessory {
     this.platform.log.info('setPower called with: ' + value);
 
     try {
-      await this.axios.post('', {
+      await this.axios.post('/json', {
         on: value,
       });
 
@@ -109,7 +111,7 @@ export class Accessory {
     this.platform.log.info('getPower called');
 
     try {
-      const response = await this.axios.get('');
+      const response = await this.axios.get('/json');
       callback(null, response.data.state.on);
     } catch (e) {
       this.platform.log.error(e);
@@ -125,7 +127,7 @@ export class Accessory {
     this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
 
     try {
-      await this.axios.post('', {
+      await this.axios.post('/json', {
         bri: brightness,
       });
       callback(null);
