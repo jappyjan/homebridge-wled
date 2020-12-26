@@ -20,7 +20,7 @@ class Accessory {
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
-        this.baseURL = `${this.device.ip}/json`;
+        this.baseURL = `http://${this.device.ip}/json`;
         this.platform.log.info(`Device ${this.device.name} Base URL: ${this.baseURL}`);
         this.configureSpeakerService();
     }
