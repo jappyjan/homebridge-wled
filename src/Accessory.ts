@@ -25,10 +25,6 @@ export class Accessory {
   private device: Device;
   private baseURL: string;
 
-  private state = {
-    mute: false,
-  };
-
   constructor(
     private readonly platform: Plugin,
     private readonly accessory: PlatformAccessory,
@@ -55,30 +51,21 @@ export class Accessory {
     // set the volume control type
     this.speakerService
       .setCharacteristic(
-        this.platform.Characteristic.Active,
-        this.platform.Characteristic.Active.ACTIVE,
-      )
-      .setCharacteristic(
         this.platform.Characteristic.VolumeControlType,
         this.platform.Characteristic.VolumeControlType.ABSOLUTE,
       );
 
     this.speakerService
-      .getCharacteristic(this.platform.Characteristic.Active)
-      .on('set', this.setPower.bind(this))
-      .on('get', this.getPower.bind(this));
-
-    this.speakerService
       .getCharacteristic(this.platform.Characteristic.Mute)
-      .on('set', this.setPower.bind(this))
-      .on('get', this.getPower.bind(this));
+      .on('set', this.setMute.bind(this))
+      .on('get', this.getMute.bind(this));
 
     this.speakerService
       .getCharacteristic(this.platform.Characteristic.VolumeSelector)
       .on('set', this.setVolume.bind(this));
   }
 
-  async setPower(
+  async setMute(
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): Promise<void> {
@@ -86,10 +73,9 @@ export class Accessory {
 
     try {
       await Axios.post(this.baseURL, {
-        on: value,
+        on: !value,
       });
 
-      this.state.mute = !this.state.mute;
       callback(null);
     } catch (e) {
       this.platform.log.error(e);
@@ -97,14 +83,14 @@ export class Accessory {
     }
   }
 
-  async getPower(
+  async getMute(
     callback: CharacteristicGetCallback,
   ): Promise<void> {
     this.platform.log.info('getPower called');
 
     try {
       const response = await Axios.get(this.baseURL);
-      callback(null, response.data.state.on);
+      callback(null, !response.data.state.on);
     } catch (e) {
       this.platform.log.error(e);
       callback(e);
