@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "WLED",
+  "pluginAlias": "wled",
   "pluginType": "platform",
   "singular": true,
   "schema": {
@@ -22,6 +22,12 @@
               "type": "string",
               "required": true,
               "format": "hostname"
+            },
+            "effects": {
+              "title": "Effects (Numeric) you want to use (upto 45) comma separated",
+              "type": "string",
+              "required": true,
+              "pattern": "^\\d*,?$"
             }
           }
         }

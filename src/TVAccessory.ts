@@ -1,6 +1,5 @@
 import {
   Categories,
-  CharacteristicGetCallback,
   CharacteristicSetCallback,
   CharacteristicValue,
   PlatformAccessory,
@@ -11,8 +10,9 @@ import {Plugin} from './Plugin';
 import Axios from 'axios';
 
 export interface Device {
-  'name': string;
-  'ip': string;
+  name: string;
+  ip: string;
+  effects: string;
 }
 
 /**
@@ -104,8 +104,16 @@ export class TVAccessory {
       availableInputServices.push(dummyInputSource);
     }
 
+    const wantedEffects = (this.device.effects || '').split(',')
+      .map(id => Number(id.trim()))
+      .filter(id => !Number.isNaN(id));
+
     const setEffectNames = (effects: string[]) => {
       effects.forEach((effectName, index) => {
+        if (!wantedEffects.includes(index)) {
+          return;
+        }
+
         const service = availableInputServices.shift();
 
         if (!service) {

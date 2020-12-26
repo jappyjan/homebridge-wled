@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Plugin = void 0;
 const settings_1 = require("./settings");
-const Accessory_1 = require("./Accessory");
+const TVAccessory_1 = require("./TVAccessory");
+const LightAccessory_1 = require("./LightAccessory");
 class Plugin {
     constructor(log, config, api) {
         this.log = log;
@@ -59,7 +60,8 @@ class Plugin {
         accessory.context.device = device;
         // create the accessory handler for the newly create accessory
         // this is imported from `platformAccessory.ts`
-        new Accessory_1.Accessory(this, accessory);
+        new TVAccessory_1.TVAccessory(this, accessory);
+        new LightAccessory_1.LightAccessory(this, accessory);
         // link the accessory to your platform
         this.api.registerPlatformAccessories(settings_1.PLUGIN_NAME, settings_1.PLATFORM_NAME, [accessory]);
     }

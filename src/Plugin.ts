@@ -2,6 +2,7 @@ import {API, Categories, Characteristic, DynamicPlatformPlugin, Logger, Platform
 
 import {PLATFORM_NAME, PLUGIN_NAME} from './settings';
 import {TVAccessory, Device} from './TVAccessory';
+import {LightAccessory} from './LightAccessory';
 
 export class Plugin implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -79,6 +80,7 @@ export class Plugin implements DynamicPlatformPlugin {
     // create the accessory handler for the newly create accessory
     // this is imported from `platformAccessory.ts`
     new TVAccessory(this, accessory);
+    new LightAccessory(this, accessory);
 
     // link the accessory to your platform
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

@@ -1,5 +1,5 @@
 import { API, Characteristic, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service } from 'homebridge';
-import { Device } from './Accessory';
+import { Device } from './TVAccessory';
 export declare class Plugin implements DynamicPlatformPlugin {
     readonly log: Logger;
     readonly config: PlatformConfig;

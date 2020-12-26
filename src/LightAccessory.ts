@@ -24,6 +24,7 @@ export class LightAccessory {
   private lightService?: Service;
   private readonly device: Device;
   private readonly baseURL: string;
+  private currentState: { [key: string]: any } = {};
 
   constructor(
     private readonly platform: Plugin,
@@ -40,6 +41,42 @@ export class LightAccessory {
     this.platform.log.info(`Lightbulb Device with ${this.device.name} Base URL: ${this.baseURL}`);
 
     this.initializeService();
+    this.loadCurrentState();
+  }
+
+  loadCurrentState() {
+    let fetchCount = 0;
+    const fetch = () => {
+      fetchCount++;
+
+      return Axios.get(this.baseURL)
+        .then(response => {
+          if (!response.data || !response.data.effects) {
+            if (fetchCount < 10) {
+              return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  fetch().then((resolve)).catch((e) => reject(e));
+                }, 500);
+              });
+            }
+
+            this.platform.log.error('Could not load effect names', response);
+            return;
+          }
+
+          this.currentState = response.data;
+
+          this.refreshCharacteristicValuesBasedOnCurrentState();
+        });
+    };
+
+    return fetch().catch(e => this.platform.log.error('Could not refresh state', e));
+  }
+
+  refreshCharacteristicValuesBasedOnCurrentState() {
+    this.lightService!
+      .setCharacteristic(this.platform.Characteristic.Name, this.currentState.info.name)
+      .setCharacteristic(this.platform.Characteristic.On, this.currentState.state.on ? 1 : 0);
   }
 
   initializeService() {
@@ -50,12 +87,6 @@ export class LightAccessory {
       this.accessory.addService(this.platform.Service.Lightbulb);
 
     this.lightService.setCharacteristic(this.platform.Characteristic.Name, this.device.name);
-
-    Axios.get(this.baseURL).then(response => {
-      this.lightService!
-        .setCharacteristic(this.platform.Characteristic.Name, response.data.info.name)
-        .setCharacteristic(this.platform.Characteristic.On, response.data.state.on ? 1 : 0);
-    }).catch(e => this.platform.log.error('Failed to set Name and initial on state', e));
 
     this.lightService
       .getCharacteristic(this.platform.Characteristic.On)
@@ -89,13 +120,8 @@ export class LightAccessory {
   ): Promise<void> {
     this.platform.log.info('getPower called');
 
-    try {
-      const response = await Axios.get(this.baseURL);
-      callback(null, response.data.state.on ? 1 : 0);
-    } catch (e) {
-      this.platform.log.error(e);
-      callback(e);
-    }
+    await this.loadCurrentState();
+    callback(null, this.currentState.state.on ? 1 : 0);
   }
 
   async setBrightness(
@@ -121,12 +147,7 @@ export class LightAccessory {
   ): Promise<void> {
     this.platform.log.info('getBrightness called');
 
-    try {
-      const response = await Axios.get(this.baseURL);
-      callback(null, Math.round((response.data.state.bri / 255) * 100));
-    } catch (e) {
-      this.platform.log.error(e);
-      callback(e);
-    }
+    await this.loadCurrentState();
+    callback(null, Math.round((this.currentState.state.bri / 255) * 100));
   }
 }
