@@ -133,7 +133,7 @@ export class Accessory {
             this.platform.Characteristic.CurrentVisibilityState.SHOWN,
           );
       });
-    }
+    };
 
     let fetchCount = 0;
     const fetchEffects = () => {
