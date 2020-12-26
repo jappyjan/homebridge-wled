@@ -157,7 +157,7 @@ export class Accessory {
     callback(null);
     try {
       await Axios.post(this.baseURL, {
-        on: value,
+        on: value === 1,
       });
     } catch (e) {
       this.platform.log.error(e);
