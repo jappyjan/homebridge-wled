@@ -92,7 +92,7 @@ export class Plugin implements DynamicPlatformPlugin {
       const accessory = new this.api.platformAccessory(
         device.name,
         this.getUid(device),
-        Categories.TELEVISION
+        Categories.TELEVISION,
       );
 
       // store a copy of the device object in the `accessory.context`
