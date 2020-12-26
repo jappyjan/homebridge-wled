@@ -118,6 +118,11 @@ export class Accessory {
 
     Axios.get(this.baseURL)
       .then(response => {
+        if (!response.data || !response.data.effects) {
+          this.platform.log.error('Effects missing from response', response);
+          return;
+        }
+
         response.data.effects.forEach((effectName, index) => {
           const service = availableInputServices.shift();
 
