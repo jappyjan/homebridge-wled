@@ -23,8 +23,8 @@ export interface Device {
 export class Accessory {
   private speakerService?: Service;
   private televisionService?: Service;
-  private device: Device;
-  private baseURL: string;
+  private readonly device: Device;
+  private readonly baseURL: string;
 
   constructor(
     private readonly platform: Plugin,
@@ -56,7 +56,7 @@ export class Accessory {
       this.televisionService!
         .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name)
         .setCharacteristic(this.platform.Characteristic.Active, response.data.state.on ? 1 : 0);
-    });
+    }).catch(e => this.platform.log.error('Failed to set Name and initial active state', e));
 
     this.televisionService
       .getCharacteristic(this.platform.Characteristic.RemoteKey)
@@ -88,12 +88,11 @@ export class Accessory {
         this.platform.Characteristic.ActiveIdentifier,
         response.data.state.seg[0].fx,
       );
-    });
+    }).catch(e => this.platform.log.error('Failed to set initial effect', e));
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
       .on('set', this.setEffect.bind(this));
-
 
     const INPUT_SOURCES_LIMIT = 45;
     const availableInputServices: Service[] = [];
@@ -135,7 +134,8 @@ export class Accessory {
               this.platform.Characteristic.CurrentVisibilityState.SHOWN,
             );
         });
-      });
+      })
+      .catch(e => this.platform.log.error('Failed to set effect names to input sources', e));
   }
 
   configureSpeakerService() {
