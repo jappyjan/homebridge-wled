@@ -19,7 +19,44 @@ class Accessory {
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
         this.baseURL = `http://${this.device.ip}/json`;
         this.platform.log.info(`Device ${this.device.name} Base URL: ${this.baseURL}`);
+        this.configureTelevisionService();
+    }
+    configureTelevisionService() {
+        this.platform.log.info('Adding Televion service');
+        this.televisionService =
+            this.accessory.getService(this.platform.Service.Television) ||
+                this.accessory.addService(this.platform.Service.Television);
+        this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, this.device.name);
+        this.televisionService.setCharacteristic(this.platform.Characteristic.SleepDiscoveryMode, this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+        this.configureInputSources();
+        this.televisionService
+            .getCharacteristic(this.platform.Characteristic.Active)
+            .on('set', this.setPower.bind(this))
+            .on('get', this.getPower.bind(this));
         this.configureSpeakerService();
+    }
+    configureInputSources() {
+        if (!this.televisionService) {
+            return;
+        }
+        this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
+        for (let effectIndex = 0; effectIndex < 100; effectIndex++) {
+            const inputSourceService = this.accessory.addService(this.platform.Service.InputSource, `effect-${effectIndex}`, `Effekt ${effectIndex}`);
+            inputSourceService
+                .setCharacteristic(this.platform.Characteristic.Identifier, 1)
+                .setCharacteristic(this.platform.Characteristic.ConfiguredName, `Effekt ${effectIndex}`)
+                .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
+                .setCharacteristic(this.platform.Characteristic.InputSourceType, this.platform.Characteristic.InputSourceType.HDMI);
+            this.televisionService.addLinkedService(inputSourceService); // link to tv service
+        }
+        // handle input source changes
+        this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
+            .on('set', (newValue, callback) => {
+            // the value will be the value you set for the Identifier Characteristic
+            // on the Input Source service that was selected - see input sources below.
+            this.platform.log.info('set Active Identifier => setNewValue: ' + newValue);
+            callback(null);
+        });
     }
     configureSpeakerService() {
         this.platform.log.info('Adding speaker service');
@@ -30,18 +67,15 @@ class Accessory {
         this.speakerService
             .setCharacteristic(this.platform.Characteristic.VolumeControlType, this.platform.Characteristic.VolumeControlType.ABSOLUTE);
         this.speakerService
-            .getCharacteristic(this.platform.Characteristic.Mute)
-            .on('set', this.setMute.bind(this))
-            .on('get', this.getMute.bind(this));
-        this.speakerService
             .getCharacteristic(this.platform.Characteristic.VolumeSelector)
             .on('set', this.setVolume.bind(this));
+        this.televisionService.addLinkedService(this.speakerService);
     }
-    async setMute(value, callback) {
+    async setPower(value, callback) {
         this.platform.log.info('setPower called with: ' + value);
         try {
             await axios_1.default.post(this.baseURL, {
-                on: !value,
+                on: value,
             });
             callback(null);
         }
@@ -50,11 +84,11 @@ class Accessory {
             callback(e);
         }
     }
-    async getMute(callback) {
+    async getPower(callback) {
         this.platform.log.info('getPower called');
         try {
             const response = await axios_1.default.get(this.baseURL);
-            callback(null, !response.data.state.on);
+            callback(null, response.data.state.on);
         }
         catch (e) {
             this.platform.log.error(e);

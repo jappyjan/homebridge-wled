@@ -13,12 +13,15 @@ export declare class Accessory {
     private readonly platform;
     private readonly accessory;
     private speakerService?;
+    private televisionService?;
     private device;
     private baseURL;
     constructor(platform: Plugin, accessory: PlatformAccessory);
+    configureTelevisionService(): void;
+    configureInputSources(): void;
     configureSpeakerService(): void;
-    setMute(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
-    getMute(callback: CharacteristicGetCallback): Promise<void>;
+    setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
+    getPower(callback: CharacteristicGetCallback): Promise<void>;
     setVolume(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
 }
 //# sourceMappingURL=Accessory.d.ts.map
