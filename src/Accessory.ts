@@ -93,10 +93,10 @@ export class Accessory {
       const dummyInputSource = new this.platform.Service.InputSource('dummy', `input_${inputId}`);
       dummyInputSource
         .setCharacteristic(this.platform.Characteristic.Identifier, inputId)
-        .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'dummy')
+        .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'CONFIGURED NAME')
         .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.NOT_CONFIGURED)
-        .setCharacteristic(this.platform.Characteristic.TargetVisibilityState, this.platform.Characteristic.TargetVisibilityState.HIDDEN)
-        .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.HIDDEN);
+        .setCharacteristic(this.platform.Characteristic.TargetVisibilityState, this.platform.Characteristic.TargetVisibilityState.SHOWN)
+        .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
 
       // add the new dummy input source service to the tv accessory
       this.televisionService.addLinkedService(dummyInputSource);
