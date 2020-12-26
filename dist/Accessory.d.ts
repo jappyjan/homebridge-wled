@@ -3,7 +3,6 @@ import { Plugin } from './Plugin';
 export interface Device {
     'name': string;
     'ip': string;
-    'port': number;
 }
 /**
  * Platform Accessory

@@ -47,7 +47,7 @@ class Plugin {
             // generate a unique id for the accessory this should be generated from
             // something globally unique, but constant, for example, the device serial
             // number or MAC address
-            const uuid = this.api.hap.uuid.generate(`jappyjan-wled_${device.ip}:${device.port}_${device.name}`);
+            const uuid = this.api.hap.uuid.generate(`jappyjan-wled_${device.ip}_${device.name}`);
             // see if an accessory with the same uuid has already been registered and restored from
             // the cached devices we stored in the `configureAccessory` method above
             const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);

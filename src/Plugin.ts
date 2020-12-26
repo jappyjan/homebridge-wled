@@ -65,7 +65,7 @@ export class Plugin implements DynamicPlatformPlugin {
         // something globally unique, but constant, for example, the device serial
         // number or MAC address
         const uuid = this.api.hap.uuid.generate(
-          `jappyjan-wled_${device.ip}:${device.port}_${device.name}`,
+          `jappyjan-wled_${device.ip}_${device.name}`,
         );
 
         // see if an accessory with the same uuid has already been registered and restored from
