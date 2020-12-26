@@ -71,13 +71,8 @@ class Accessory {
             this.accessory.addService(dummyInputSource);
             availableInputServices.push(dummyInputSource);
         }
-        axios_1.default.get(this.baseURL)
-            .then(response => {
-            if (!response.data || !response.data.effects) {
-                this.platform.log.error('Effects missing from response', response);
-                return;
-            }
-            response.data.effects.forEach((effectName, index) => {
+        const setEffectNames = (effects) => {
+            effects.forEach((effectName, index) => {
                 const service = availableInputServices.shift();
                 if (!service) {
                     this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
@@ -88,8 +83,27 @@ class Accessory {
                     .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
                     .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
             });
-        })
-            .catch(e => this.platform.log.error('Failed to set effect names to input sources', e));
+        };
+        let fetchCount = 0;
+        const fetchEffects = () => {
+            fetchCount++;
+            return axios_1.default.get(this.baseURL)
+                .then(response => {
+                if (!response.data || !response.data.effects) {
+                    if (fetchCount < 10) {
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                fetchEffects().then((resolve)).catch((e) => reject(e));
+                            }, 500);
+                        });
+                    }
+                    this.platform.log.error('Could not load effect names', response);
+                    return [];
+                }
+                return response.data.effects;
+            });
+        };
+        fetchEffects().then(effects => setEffectNames(effects));
     }
     configureSpeakerService() {
         this.platform.log.info('Adding speaker service');

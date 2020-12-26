@@ -176,7 +176,7 @@ export class Accessory {
 
     this.speakerService
       .getCharacteristic(this.platform.Characteristic.VolumeSelector)
-      .on('set', this.setVolume.bind(this));
+      .on('set', this.onVolumeChange.bind(this));
 
     this.televisionService!.addLinkedService(this.speakerService);
   }
@@ -211,11 +211,11 @@ export class Accessory {
     }
   }
 
-  async setVolume(
+  async onVolumeChange(
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): Promise<void> {
-    const brightness = 255 * (100 / (value as number));
+    const brightness = value as number;
     this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
 
     try {
