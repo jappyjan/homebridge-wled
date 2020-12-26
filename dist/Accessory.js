@@ -20,8 +20,10 @@ class Accessory {
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
+        const baseURL = `${this.device.ip}:${this.device.port}`;
+        this.platform.log.info(`Device ${this.device.name} Base URL: ${baseURL}`);
         this.axios = axios_1.default.create({
-            baseURL: `${this.device.ip}:${this.device.port}`,
+            baseURL,
         });
         this.configureSpeakerService();
     }
