@@ -19,8 +19,9 @@ class Accessory {
         };
         accessory.category = 31 /* TELEVISION */;
         this.device = accessory.context.device;
+        this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
         this.axios = axios_1.default.create({
-            baseURL: `${this.device.ip}:${this.device.port}/json`,
+            baseURL: `${this.device.ip}:${this.device.port}`,
         });
         this.configureSpeakerService();
     }
@@ -52,7 +53,7 @@ class Accessory {
     async setPower(value, callback) {
         this.platform.log.info('setPower called with: ' + value);
         try {
-            await this.axios.post('', {
+            await this.axios.post('/json', {
                 on: value,
             });
             this.state.mute = !this.state.mute;
@@ -66,7 +67,7 @@ class Accessory {
     async getPower(callback) {
         this.platform.log.info('getPower called');
         try {
-            const response = await this.axios.get('');
+            const response = await this.axios.get('/json');
             callback(null, response.data.state.on);
         }
         catch (e) {
@@ -78,7 +79,7 @@ class Accessory {
         const brightness = 255 * (100 / value);
         this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
         try {
-            await this.axios.post('', {
+            await this.axios.post('/json', {
                 bri: brightness,
             });
             callback(null);
