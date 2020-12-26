@@ -74,7 +74,6 @@ export class Accessory {
 
     const response = await Axios.get(this.baseURL + '/json');
 
-    const AVAILABLE_EFFECTS = 113;
     response.data.effects.forEach((name, index) => {
       const inputSourceService = this.accessory.addService(
         this.platform.Service.InputSource,
