@@ -9,7 +9,6 @@ import {
 
 import {Plugin} from './Plugin';
 import Axios from 'axios';
-import {ALL} from 'dns';
 
 export interface Device {
   'name': string;
