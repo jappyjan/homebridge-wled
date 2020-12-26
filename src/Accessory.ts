@@ -35,7 +35,7 @@ export class Accessory {
     private readonly platform: Plugin,
     private readonly accessory: PlatformAccessory,
   ) {
-    accessory.category = Categories.LIGHTBULB;
+    accessory.category = Categories.TELEVISION;
 
     this.device = accessory.context.device;
 
