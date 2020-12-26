@@ -98,7 +98,7 @@ class Accessory {
         callback(null);
         try {
             await axios_1.default.post(this.baseURL, {
-                on: value,
+                on: value === 1,
             });
         }
         catch (e) {

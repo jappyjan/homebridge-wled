@@ -51,6 +51,17 @@ export class Accessory {
       this.accessory.addService(this.platform.Service.Television);
 
     this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, this.device.name);
+
+    Axios.get(this.baseURL).then(response => {
+      this.televisionService!
+        .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name)
+        .setCharacteristic(this.platform.Characteristic.Active, response.data.state.on ? 1 : 0);
+    });
+
+    this.televisionService
+      .getCharacteristic(this.platform.Characteristic.RemoteKey)
+      .on('set', this.onRemoteKeyPress.bind(this));
+
     this.televisionService.setCharacteristic(
       this.platform.Characteristic.SleepDiscoveryMode,
       this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE,
@@ -194,5 +205,9 @@ export class Accessory {
       this.platform.log.error(e);
       callback(e);
     }
+  }
+
+  async onRemoteKeyPress(remoteKey: unknown, callback: CharacteristicSetCallback) {
+    callback(null);
   }
 }
