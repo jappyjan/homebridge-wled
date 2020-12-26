@@ -49,20 +49,36 @@ class Accessory {
             callback(null);
         });
         const INPUT_SOURCES_LIMIT = 45;
+        const availableInputServices = [];
         // create dummy inputs
         for (let i = 0; i < INPUT_SOURCES_LIMIT; i++) {
             const inputId = i;
             const dummyInputSource = new this.platform.Service.InputSource('dummy', `input_${inputId}`);
             dummyInputSource
                 .setCharacteristic(this.platform.Characteristic.Identifier, inputId)
-                .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'CONFIGURED NAME')
+                .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'dummy')
                 .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.NOT_CONFIGURED)
                 .setCharacteristic(this.platform.Characteristic.TargetVisibilityState, this.platform.Characteristic.TargetVisibilityState.SHOWN)
-                .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
+                .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.HIDDEN);
             // add the new dummy input source service to the tv accessory
             this.televisionService.addLinkedService(dummyInputSource);
             this.accessory.addService(dummyInputSource);
+            availableInputServices.push(dummyInputSource);
         }
+        axios_1.default.get(this.baseURL)
+            .then(response => {
+            response.data.effects.forEach((effectName, index) => {
+                const service = availableInputServices.shift();
+                if (!service) {
+                    this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
+                    return;
+                }
+                service
+                    .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
+                    .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
+                    .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
+            });
+        });
     }
     configureSpeakerService() {
         this.platform.log.info('Adding speaker service');

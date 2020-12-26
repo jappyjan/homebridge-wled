@@ -1,4 +1,5 @@
 import { API, Characteristic, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service } from 'homebridge';
+import { Device } from './Accessory';
 export declare class Plugin implements DynamicPlatformPlugin {
     readonly log: Logger;
     readonly config: PlatformConfig;
@@ -18,5 +19,8 @@ export declare class Plugin implements DynamicPlatformPlugin {
      * must not be registered again to prevent "duplicate UUID" errors.
      */
     discoverDevices(): void;
+    getUid(device: Device): string;
+    addAccessory(device: Device): void;
+    removeAccessory(accessory: PlatformAccessory): void;
 }
 //# sourceMappingURL=Plugin.d.ts.map
