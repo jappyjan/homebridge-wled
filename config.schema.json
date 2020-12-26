@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "HTTP-IR-TV",
+  "pluginAlias": "WLED",
   "pluginType": "platform",
   "singular": true,
   "schema": {
