@@ -14,9 +14,6 @@ class Accessory {
     constructor(platform, accessory) {
         this.platform = platform;
         this.accessory = accessory;
-        this.state = {
-            mute: false,
-        };
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
@@ -31,27 +28,21 @@ class Accessory {
                 this.accessory.addService(this.platform.Service.TelevisionSpeaker);
         // set the volume control type
         this.speakerService
-            .setCharacteristic(this.platform.Characteristic.Active, this.platform.Characteristic.Active.ACTIVE)
             .setCharacteristic(this.platform.Characteristic.VolumeControlType, this.platform.Characteristic.VolumeControlType.ABSOLUTE);
         this.speakerService
-            .getCharacteristic(this.platform.Characteristic.Active)
-            .on('set', this.setPower.bind(this))
-            .on('get', this.getPower.bind(this));
-        this.speakerService
             .getCharacteristic(this.platform.Characteristic.Mute)
-            .on('set', this.setPower.bind(this))
-            .on('get', this.getPower.bind(this));
+            .on('set', this.setMute.bind(this))
+            .on('get', this.getMute.bind(this));
         this.speakerService
             .getCharacteristic(this.platform.Characteristic.VolumeSelector)
             .on('set', this.setVolume.bind(this));
     }
-    async setPower(value, callback) {
+    async setMute(value, callback) {
         this.platform.log.info('setPower called with: ' + value);
         try {
             await axios_1.default.post(this.baseURL, {
-                on: value,
+                on: !value,
             });
-            this.state.mute = !this.state.mute;
             callback(null);
         }
         catch (e) {
@@ -59,11 +50,11 @@ class Accessory {
             callback(e);
         }
     }
-    async getPower(callback) {
+    async getMute(callback) {
         this.platform.log.info('getPower called');
         try {
             const response = await axios_1.default.get(this.baseURL);
-            callback(null, response.data.state.on);
+            callback(null, !response.data.state.on);
         }
         catch (e) {
             this.platform.log.error(e);
