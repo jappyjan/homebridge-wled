@@ -42,10 +42,7 @@ export class Plugin implements DynamicPlatformPlugin {
      * It should be used to setup event handlers for characteristics and update respective values.
      */
     configureAccessory(accessory: PlatformAccessory) {
-      this.log.info('Loading accessory from cache:', accessory.displayName);
-
-      // add the restored accessory to the accessories cache so we can track if it has already been registered
-      this.accessories.push(accessory);
+      this.removeAccessory(accessory);
     }
 
     /**
@@ -64,9 +61,7 @@ export class Plugin implements DynamicPlatformPlugin {
         // generate a unique id for the accessory this should be generated from
         // something globally unique, but constant, for example, the device serial
         // number or MAC address
-        const uuid = this.api.hap.uuid.generate(
-          `jappyjan-wled_${device.ip}_${device.name}`,
-        );
+        const uuid = this.getUid(device);
 
         // see if an accessory with the same uuid has already been registered and restored from
         // the cached devices we stored in the `configureAccessory` method above
@@ -75,28 +70,45 @@ export class Plugin implements DynamicPlatformPlugin {
         if (existingAccessory) {
           // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
           // remove platform accessories when no longer present
-          this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-          this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-
+          this.removeAccessory(existingAccessory);
           return;
         }
 
-        // the accessory does not yet exist, so we need to create it
-        this.log.info('Adding new accessory:', device.name);
-
-        // create a new accessory
-        const accessory = new this.api.platformAccessory(device.name, uuid, Categories.TELEVISION);
-
-        // store a copy of the device object in the `accessory.context`
-        // the `context` property can be used to store any data about the accessory you may need
-        accessory.context.device = device;
-
-        // create the accessory handler for the newly create accessory
-        // this is imported from `platformAccessory.ts`
-        new Accessory(this, accessory);
-
-        // link the accessory to your platform
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+        this.addAccessory(device);
       }
+    }
+
+    getUid(device: Device) {
+      return this.api.hap.uuid.generate(
+        `jappyjan-wled_${device.ip}_${device.name}`,
+      );
+    }
+
+    addAccessory(device: Device) {
+      // the accessory does not yet exist, so we need to create it
+      this.log.info('Adding new accessory:', device.name);
+
+      // create a new accessory
+      const accessory = new this.api.platformAccessory(
+        device.name,
+        this.getUid(device),
+        Categories.TELEVISION
+      );
+
+      // store a copy of the device object in the `accessory.context`
+      // the `context` property can be used to store any data about the accessory you may need
+      accessory.context.device = device;
+
+      // create the accessory handler for the newly create accessory
+      // this is imported from `platformAccessory.ts`
+      new Accessory(this, accessory);
+
+      // link the accessory to your platform
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+    }
+
+    removeAccessory(accessory: PlatformAccessory) {
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+      this.log.info('Removing existing accessory from cache:', accessory.displayName);
     }
 }
