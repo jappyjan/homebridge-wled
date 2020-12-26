@@ -14,8 +14,8 @@ export declare class Accessory {
     private readonly accessory;
     private speakerService?;
     private televisionService?;
-    private device;
-    private baseURL;
+    private readonly device;
+    private readonly baseURL;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     configureTelevisionService(): void;
     configureInputSources(): void;

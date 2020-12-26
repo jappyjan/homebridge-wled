@@ -31,7 +31,7 @@ class Accessory {
             this.televisionService
                 .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name)
                 .setCharacteristic(this.platform.Characteristic.Active, response.data.state.on ? 1 : 0);
-        });
+        }).catch(e => this.platform.log.error('Failed to set Name and initial active state', e));
         this.televisionService
             .getCharacteristic(this.platform.Characteristic.RemoteKey)
             .on('set', this.onRemoteKeyPress.bind(this));
@@ -50,7 +50,7 @@ class Accessory {
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
         axios_1.default.get(this.baseURL).then(response => {
             this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, response.data.state.seg[0].fx);
-        });
+        }).catch(e => this.platform.log.error('Failed to set initial effect', e));
         // handle input source changes
         this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
             .on('set', this.setEffect.bind(this));
@@ -84,7 +84,8 @@ class Accessory {
                     .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
                     .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
             });
-        });
+        })
+            .catch(e => this.platform.log.error('Failed to set effect names to input sources', e));
     }
     configureSpeakerService() {
         this.platform.log.info('Adding speaker service');
