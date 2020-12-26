@@ -40,8 +40,12 @@ export class Accessory {
 
     this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
 
+    const baseURL = `${this.device.ip}:${this.device.port}`;
+
+    this.platform.log.info(`Device ${this.device.name} Base URL: ${baseURL}`);
+
     this.axios = Axios.create({
-      baseURL: `${this.device.ip}:${this.device.port}`,
+      baseURL,
     });
 
     this.configureSpeakerService();

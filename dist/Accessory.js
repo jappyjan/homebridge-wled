@@ -17,7 +17,7 @@ class Accessory {
         this.state = {
             mute: false,
         };
-        accessory.category = 31 /* TELEVISION */;
+        accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.platform.log.info(`Adding Device ${this.device.name}`, this.device);
         this.axios = axios_1.default.create({
@@ -30,10 +30,6 @@ class Accessory {
         this.speakerService =
             this.accessory.getService(this.platform.Service.TelevisionSpeaker) ||
                 this.accessory.addService(this.platform.Service.TelevisionSpeaker);
-        this.tvService =
-            this.accessory.getService(this.platform.Service.Television) ||
-                this.accessory.addService(this.platform.Service.Television);
-        this.tvService.addLinkedService(this.speakerService);
         // set the volume control type
         this.speakerService
             .setCharacteristic(this.platform.Characteristic.Active, this.platform.Characteristic.Active.ACTIVE)
