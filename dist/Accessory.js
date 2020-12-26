@@ -25,7 +25,7 @@ class Accessory {
         this.configureSpeakerService();
     }
     configureSpeakerService() {
-        this.platform.log.debug('Adding speaker service');
+        this.platform.log.info('Adding speaker service');
         this.speakerService =
             this.accessory.getService(this.platform.Service.Speaker) ||
                 this.accessory.addService(this.platform.Service.Speaker);
@@ -38,11 +38,15 @@ class Accessory {
             .on('set', this.setPower.bind(this))
             .on('get', this.getPower.bind(this));
         this.speakerService
+            .getCharacteristic(this.platform.Characteristic.Mute)
+            .on('set', this.setPower.bind(this))
+            .on('get', this.getPower.bind(this));
+        this.speakerService
             .getCharacteristic(this.platform.Characteristic.VolumeSelector)
             .on('set', this.setVolume.bind(this));
     }
     async setPower(value, callback) {
-        this.platform.log.debug('setPower called with: ' + value);
+        this.platform.log.info('setPower called with: ' + value);
         try {
             await this.axios.post('', {
                 on: value,
@@ -51,24 +55,24 @@ class Accessory {
             callback(null);
         }
         catch (e) {
-            this.platform.log.debug(e);
+            this.platform.log.error(e);
             callback(e);
         }
     }
     async getPower(callback) {
-        this.platform.log.debug('getPower called');
+        this.platform.log.info('getPower called');
         try {
             const response = await this.axios.get('');
             callback(null, response.data.state.on);
         }
         catch (e) {
-            this.platform.log.debug(e);
+            this.platform.log.error(e);
             callback(e);
         }
     }
     async setVolume(value, callback) {
         const brightness = 255 * (100 / value);
-        this.platform.log.debug(`setVolume called with: ${value}, calculated bri: ${brightness}`);
+        this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
         try {
             await this.axios.post('', {
                 bri: brightness,
@@ -76,7 +80,7 @@ class Accessory {
             callback(null);
         }
         catch (e) {
-            this.platform.log.debug(e);
+            this.platform.log.error(e);
             callback(e);
         }
     }

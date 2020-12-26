@@ -46,7 +46,7 @@ export class Accessory {
   }
 
   configureSpeakerService() {
-    this.platform.log.debug('Adding speaker service');
+    this.platform.log.info('Adding speaker service');
     this.speakerService =
       this.accessory.getService(this.platform.Service.Speaker) ||
       this.accessory.addService(this.platform.Service.Speaker);
@@ -81,7 +81,7 @@ export class Accessory {
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): Promise<void> {
-    this.platform.log.debug('setPower called with: ' + value);
+    this.platform.log.info('setPower called with: ' + value);
 
     try {
       await this.axios.post('', {
@@ -91,7 +91,7 @@ export class Accessory {
       this.state.mute = !this.state.mute;
       callback(null);
     } catch (e) {
-      this.platform.log.debug(e);
+      this.platform.log.error(e);
       callback(e);
     }
   }
@@ -99,13 +99,13 @@ export class Accessory {
   async getPower(
     callback: CharacteristicGetCallback,
   ): Promise<void> {
-    this.platform.log.debug('getPower called');
+    this.platform.log.info('getPower called');
 
     try {
       const response = await this.axios.get('');
       callback(null, response.data.state.on);
     } catch (e) {
-      this.platform.log.debug(e);
+      this.platform.log.error(e);
       callback(e);
     }
   }
@@ -115,7 +115,7 @@ export class Accessory {
     callback: CharacteristicSetCallback,
   ): Promise<void> {
     const brightness = 255 * (100 / (value as number));
-    this.platform.log.debug(`setVolume called with: ${value}, calculated bri: ${brightness}`);
+    this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
 
     try {
       await this.axios.post('', {
@@ -123,7 +123,7 @@ export class Accessory {
       });
       callback(null);
     } catch (e) {
-      this.platform.log.debug(e);
+      this.platform.log.error(e);
       callback(e);
     }
   }
