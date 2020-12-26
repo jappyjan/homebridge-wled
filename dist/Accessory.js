@@ -27,6 +27,14 @@ class Accessory {
             this.accessory.getService(this.platform.Service.Television) ||
                 this.accessory.addService(this.platform.Service.Television);
         this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, this.device.name);
+        axios_1.default.get(this.baseURL).then(response => {
+            this.televisionService
+                .setCharacteristic(this.platform.Characteristic.ConfiguredName, response.data.info.name)
+                .setCharacteristic(this.platform.Characteristic.Active, response.data.state.on ? 1 : 0);
+        });
+        this.televisionService
+            .getCharacteristic(this.platform.Characteristic.RemoteKey)
+            .on('set', this.onRemoteKeyPress.bind(this));
         this.televisionService.setCharacteristic(this.platform.Characteristic.SleepDiscoveryMode, this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
         this.configureInputSources();
         this.televisionService
@@ -129,6 +137,9 @@ class Accessory {
             this.platform.log.error(e);
             callback(e);
         }
+    }
+    async onRemoteKeyPress(remoteKey, callback) {
+        callback(null);
     }
 }
 exports.Accessory = Accessory;

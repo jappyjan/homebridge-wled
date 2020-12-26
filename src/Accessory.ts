@@ -83,17 +83,16 @@ export class Accessory {
     }
 
     this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
+    Axios.get(this.baseURL).then(response => {
+      this.televisionService!.setCharacteristic(
+        this.platform.Characteristic.ActiveIdentifier,
+        response.data.state.seg[0].fx,
+      );
+    });
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
-      .on('set', (newValue, callback) => {
-
-        // the value will be the value you set for the Identifier Characteristic
-        // on the Input Source service that was selected - see input sources below.
-
-        this.platform.log.info('set Active Identifier => setNewValue: ' + newValue);
-        callback(null);
-      });
+      .on('set', this.setEffect.bind(this));
 
 
     const INPUT_SOURCES_LIMIT = 45;
@@ -208,6 +207,28 @@ export class Accessory {
   }
 
   async onRemoteKeyPress(remoteKey: unknown, callback: CharacteristicSetCallback) {
+    callback(null);
+  }
+
+  async setEffect(value: CharacteristicValue, callback: CharacteristicSetCallback) {
+    this.platform.log.info(`Setting Effect to ${value}`);
+
+    try {
+      const response = await Axios.get(this.baseURL);
+
+      const segConfigs = response.data.state.seg.map(() => {
+        return {
+          fx: value,
+        };
+      });
+
+      await Axios.post(this.baseURL, {
+        seg: segConfigs,
+      });
+    } catch (e) {
+      this.platform.log.error(e);
+    }
+
     callback(null);
   }
 }
