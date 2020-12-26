@@ -22,13 +22,13 @@ class Accessory {
         this.configureTelevisionService();
     }
     configureTelevisionService() {
-        this.platform.log.info('Adding Televion service');
+        this.platform.log.info('Adding Television service');
         this.televisionService =
             this.accessory.getService(this.platform.Service.Television) ||
                 this.accessory.addService(this.platform.Service.Television);
         this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, this.device.name);
         this.televisionService.setCharacteristic(this.platform.Characteristic.SleepDiscoveryMode, this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-        this.configureInputSources();
+        this.configureInputSources().catch(e => this.platform.log.error(e));
         this.televisionService
             .getCharacteristic(this.platform.Characteristic.Active)
             .on('set', this.setPower.bind(this))

@@ -72,7 +72,7 @@ export class Accessory {
 
     this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
 
-    const response = await Axios.get(this.baseURL + '/json');
+    const response = await Axios.get(this.baseURL);
 
     response.data.effects.forEach((name, index) => {
       const inputSourceService = this.accessory.addService(
