@@ -27,13 +27,8 @@
       <change beforePath="$PROJECT_DIR$/dist/Accessory.d.ts.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/Accessory.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/Accessory.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/LightAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.d.ts.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/LightAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/LightAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LightAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/LightAccessory.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Plugin.ts" afterDir="false" />
@@ -97,7 +92,7 @@
       <workItem from="1603207203340" duration="1261000" />
       <workItem from="1603215673640" duration="58000" />
       <workItem from="1603221562170" duration="1917000" />
-      <workItem from="1608984006662" duration="20092000" />
+      <workItem from="1608984006662" duration="20325000" />
     </task>
     <servers />
   </component>

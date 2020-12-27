@@ -35,13 +35,17 @@ export default class WLEDClient {
 
           this.currentState = response.data;
 
-          if (typeof this.onStateChange === 'function') {
-            this.onStateChange(this.currentState);
-          }
+          this.emitStateChange();
         });
     };
 
     return fetch().catch(e => this.log.error('Could not refresh state', e));
+  }
+
+  private emitStateChange() {
+    if (typeof this.onStateChange === 'function') {
+      this.onStateChange(this.currentState);
+    }
   }
 
   public async setPower(on: boolean): Promise<null | Error> {
@@ -49,6 +53,10 @@ export default class WLEDClient {
       await Axios.post(this.baseURL, {
         on,
       });
+
+      this.currentState.state.on = on;
+      this.emitStateChange();
+
       return null;
     } catch (e) {
       this.log.error(e);
@@ -61,6 +69,10 @@ export default class WLEDClient {
       await Axios.post(this.baseURL, {
         bri,
       });
+
+      this.currentState.state.bri = bri;
+      this.emitStateChange();
+
       return null;
     } catch (e) {
       this.log.error(e);
@@ -85,6 +97,9 @@ export default class WLEDClient {
       await Axios.post(this.baseURL, {
         seg: segConfigs,
       });
+
+      this.currentState.state.seg = segConfigs;
+      this.emitStateChange();
 
       return null;
     } catch (e) {

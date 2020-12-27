@@ -43,7 +43,7 @@ class LightAccessory {
     }
     async setPower(value, callback) {
         this.platform.log.info(`Set Power to ${value} via Lightbulb`);
-        const result = await this.client.setPower(value === 1);
+        const result = await this.client.setPower(value);
         callback(result);
     }
     async getPower(callback) {
