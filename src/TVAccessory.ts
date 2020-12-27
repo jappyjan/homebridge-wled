@@ -16,6 +16,8 @@ export interface Device {
   effects: string;
 }
 
+const INPUT_SOURCES_LIMIT = 45;
+
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -25,6 +27,8 @@ export class TVAccessory {
   private televisionService?: Service;
   private readonly device: Device;
   private readonly client: WLEDClient;
+  private readonly availableInputServices: Service[] = [];
+  private effectNamesLoaded = false;
 
   constructor(
     private readonly platform: Plugin,
@@ -37,7 +41,6 @@ export class TVAccessory {
 
     this.initializeService();
     this.client.onStateChange = this.onWLEDStateChange.bind(this);
-    this.client.loadCurrentState();
   }
 
   private onWLEDStateChange(currentState: any) {
@@ -55,6 +58,8 @@ export class TVAccessory {
       this.platform.Characteristic.Active,
       currentState.state.on ? 1 : 0,
     );
+
+    this.setEffectNames(this.client.currentState.effects);
   }
 
   private initializeService() {
@@ -89,9 +94,6 @@ export class TVAccessory {
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
       .on('set', this.setInputSource.bind(this));
 
-    const INPUT_SOURCES_LIMIT = 45;
-    const availableInputServices: Service[] = [];
-
     // create dummy inputs
     for (let i = 0; i < INPUT_SOURCES_LIMIT; i++) {
       const inputId = i;
@@ -108,40 +110,39 @@ export class TVAccessory {
       this.televisionService.addLinkedService(dummyInputSource);
       this.accessory.addService(dummyInputSource);
 
-      availableInputServices.push(dummyInputSource);
+      this.availableInputServices.push(dummyInputSource);
+    }
+  }
+
+  private setEffectNames (effects: string[]) {
+    if (this.effectNamesLoaded) {
+      return;
     }
 
     const wantedEffects = (this.device.effects || '').split(',')
       .map(id => Number(id.trim()))
       .filter(id => !Number.isNaN(id));
 
-    const setEffectNames = (effects: string[]) => {
-      effects.forEach((effectName, index) => {
-        if (!wantedEffects.includes(index)) {
-          return;
-        }
+    effects.forEach((effectName, index) => {
+      if (!wantedEffects.includes(index)) {
+        return;
+      }
 
-        const service = availableInputServices.shift();
+      const service = this.availableInputServices.shift();
 
-        if (!service) {
-          this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
-          return;
-        }
+      if (!service) {
+        this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
+        return;
+      }
 
-        service
-          .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
-          .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
-          .setCharacteristic(
-            this.platform.Characteristic.CurrentVisibilityState,
-            this.platform.Characteristic.CurrentVisibilityState.SHOWN,
-          );
-      });
-    };
-
-    this.client.loadCurrentState()
-      .then(() => {
-        setEffectNames(this.client.currentState.effects);
-      });
+      service
+        .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
+        .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
+        .setCharacteristic(
+          this.platform.Characteristic.CurrentVisibilityState,
+          this.platform.Characteristic.CurrentVisibilityState.SHOWN,
+        );
+    });
   }
 
   async setPower(
@@ -156,7 +157,6 @@ export class TVAccessory {
   async getPower(
     callback: CharacteristicGetCallback,
   ): Promise<void> {
-    await this.client.loadCurrentState();
     callback(null, this.client.currentState.state.on ? 1 : 0);
   }
 
