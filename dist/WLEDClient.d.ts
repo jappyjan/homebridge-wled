@@ -8,8 +8,10 @@ export default class WLEDClient {
     onStateChange: ((state: {
         [key: string]: any;
     }) => any) | null;
+    private isSettingBrightness;
+    private briChangeVal;
     constructor(ip: string, logger: Logger);
-    loadCurrentState(): Promise<unknown>;
+    private loadCurrentState;
     private emitStateChange;
     setPower(on: boolean): Promise<null | Error>;
     setBrightness(bri: number): Promise<null | Error>;

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TVAccessory = void 0;
 const WLEDClient_1 = __importDefault(require("./WLEDClient"));
+const INPUT_SOURCES_LIMIT = 45;
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -14,17 +15,19 @@ class TVAccessory {
     constructor(platform, accessory) {
         this.platform = platform;
         this.accessory = accessory;
+        this.availableInputServices = [];
+        this.effectNamesLoaded = false;
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.client = new WLEDClient_1.default(this.device.ip, this.platform.log);
         this.initializeService();
         this.client.onStateChange = this.onWLEDStateChange.bind(this);
-        this.client.loadCurrentState();
     }
     onWLEDStateChange(currentState) {
         this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, currentState.info.name + ' (FX)');
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, currentState.state.seg[0].fx);
         this.televisionService.setCharacteristic(this.platform.Characteristic.Active, currentState.state.on ? 1 : 0);
+        this.setEffectNames(this.client.currentState.effects);
     }
     initializeService() {
         this.televisionService =
@@ -47,8 +50,6 @@ class TVAccessory {
         // handle input source changes
         this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
             .on('set', this.setInputSource.bind(this));
-        const INPUT_SOURCES_LIMIT = 45;
-        const availableInputServices = [];
         // create dummy inputs
         for (let i = 0; i < INPUT_SOURCES_LIMIT; i++) {
             const inputId = i;
@@ -62,30 +63,29 @@ class TVAccessory {
             // add the new dummy input source service to the tv accessory
             this.televisionService.addLinkedService(dummyInputSource);
             this.accessory.addService(dummyInputSource);
-            availableInputServices.push(dummyInputSource);
+            this.availableInputServices.push(dummyInputSource);
+        }
+    }
+    setEffectNames(effects) {
+        if (this.effectNamesLoaded) {
+            return;
         }
         const wantedEffects = (this.device.effects || '').split(',')
             .map(id => Number(id.trim()))
             .filter(id => !Number.isNaN(id));
-        const setEffectNames = (effects) => {
-            effects.forEach((effectName, index) => {
-                if (!wantedEffects.includes(index)) {
-                    return;
-                }
-                const service = availableInputServices.shift();
-                if (!service) {
-                    this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
-                    return;
-                }
-                service
-                    .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
-                    .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
-                    .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
-            });
-        };
-        this.client.loadCurrentState()
-            .then(() => {
-            setEffectNames(this.client.currentState.effects);
+        effects.forEach((effectName, index) => {
+            if (!wantedEffects.includes(index)) {
+                return;
+            }
+            const service = this.availableInputServices.shift();
+            if (!service) {
+                this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
+                return;
+            }
+            service
+                .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
+                .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
+                .setCharacteristic(this.platform.Characteristic.CurrentVisibilityState, this.platform.Characteristic.CurrentVisibilityState.SHOWN);
         });
     }
     async setPower(value, callback) {
@@ -94,7 +94,6 @@ class TVAccessory {
         callback(result);
     }
     async getPower(callback) {
-        await this.client.loadCurrentState();
         callback(null, this.client.currentState.state.on ? 1 : 0);
     }
     async setInputSource(value, callback) {

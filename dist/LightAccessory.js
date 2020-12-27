@@ -19,7 +19,6 @@ class LightAccessory {
         this.initializeService();
         this.client = new WLEDClient_1.default(this.device.ip, this.platform.log);
         this.client.onStateChange = this.onWLEDStateChange.bind(this);
-        this.client.loadCurrentState();
     }
     initializeService() {
         this.platform.log.info('Adding Lightbulb service');
@@ -47,7 +46,6 @@ class LightAccessory {
         callback(result);
     }
     async getPower(callback) {
-        await this.client.loadCurrentState();
         callback(null, this.client.currentState.state.on ? 1 : 0);
     }
     async setBrightness(value, callback) {
@@ -57,7 +55,6 @@ class LightAccessory {
         callback(result);
     }
     async getBrightness(callback) {
-        await this.client.loadCurrentState();
         callback(null, Math.round((this.client.currentState.state.bri / 255) * 100));
     }
 }

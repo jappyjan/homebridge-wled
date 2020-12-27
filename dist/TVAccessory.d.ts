@@ -16,10 +16,13 @@ export declare class TVAccessory {
     private televisionService?;
     private readonly device;
     private readonly client;
+    private readonly availableInputServices;
+    private effectNamesLoaded;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     private onWLEDStateChange;
     private initializeService;
     private configureInputSources;
+    private setEffectNames;
     setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     getPower(callback: CharacteristicGetCallback): Promise<void>;
     setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;

@@ -8,9 +8,11 @@ class WLEDClient {
     constructor(ip, logger) {
         this.currentState = {};
         this.onStateChange = null;
+        this.isSettingBrightness = false;
+        this.briChangeVal = null;
         this.log = logger;
         this.baseURL = `http://${ip}/json`;
-        this.loadCurrentState();
+        setInterval(() => this.loadCurrentState(), 1000);
     }
     loadCurrentState() {
         let fetchCount = 0;
@@ -55,6 +57,11 @@ class WLEDClient {
         }
     }
     async setBrightness(bri) {
+        if (this.isSettingBrightness) {
+            this.briChangeVal = bri;
+            return null;
+        }
+        this.isSettingBrightness = true;
         try {
             await axios_1.default.post(this.baseURL, {
                 bri,
@@ -66,6 +73,12 @@ class WLEDClient {
         catch (e) {
             this.log.error(e);
             return e;
+        }
+        finally {
+            if (this.briChangeVal !== null) {
+                await this.setBrightness(this.briChangeVal);
+            }
+            this.briChangeVal = null;
         }
     }
     async setEffect(effectIndex) {
