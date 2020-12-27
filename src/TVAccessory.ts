@@ -43,7 +43,7 @@ export class TVAccessory {
   private onWLEDStateChange(currentState: any) {
     this.televisionService!.setCharacteristic(
       this.platform.Characteristic.ConfiguredName,
-      currentState.info.name,
+      currentState.info.name + ' (FX)',
     );
 
     this.televisionService!.setCharacteristic(
