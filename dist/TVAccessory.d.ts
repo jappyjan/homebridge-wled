@@ -1,4 +1,4 @@
-import { CharacteristicSetCallback, CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicGetCallback, CharacteristicSetCallback, CharacteristicValue, PlatformAccessory } from 'homebridge';
 import { Plugin } from './Plugin';
 export interface Device {
     name: string;
@@ -13,13 +13,14 @@ export interface Device {
 export declare class TVAccessory {
     private readonly platform;
     private readonly accessory;
-    private speakerService?;
     private televisionService?;
     private readonly device;
-    private readonly baseURL;
+    private readonly client;
     constructor(platform: Plugin, accessory: PlatformAccessory);
-    initializeService(): void;
-    configureInputSources(): void;
-    setEffect(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
+    private onWLEDStateChange;
+    private initializeService;
+    private configureInputSources;
+    setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
+    getPower(callback: CharacteristicGetCallback): Promise<void>;
 }
 //# sourceMappingURL=TVAccessory.d.ts.map

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LightAccessory = void 0;
-const axios_1 = __importDefault(require("axios"));
+const WLEDClient_1 = __importDefault(require("./WLEDClient"));
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -14,42 +14,12 @@ class LightAccessory {
     constructor(platform, accessory) {
         this.platform = platform;
         this.accessory = accessory;
-        this.currentState = {};
         accessory.category = 5 /* LIGHTBULB */;
         this.device = accessory.context.device;
-        this.platform.log.info(`Adding Lightbulb Device ${this.device.name}`, this.device);
-        this.baseURL = `http://${this.device.ip}/json`;
-        this.platform.log.info(`Lightbulb Device with ${this.device.name} Base URL: ${this.baseURL}`);
         this.initializeService();
-        this.loadCurrentState();
-    }
-    loadCurrentState() {
-        let fetchCount = 0;
-        const fetch = () => {
-            fetchCount++;
-            return axios_1.default.get(this.baseURL)
-                .then(response => {
-                if (!response.data || !response.data.effects) {
-                    if (fetchCount < 10) {
-                        return new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                                fetch().then((resolve)).catch((e) => reject(e));
-                            }, 500);
-                        });
-                    }
-                    this.platform.log.error('Could not load effect names', response);
-                    return;
-                }
-                this.currentState = response.data;
-                this.refreshCharacteristicValuesBasedOnCurrentState();
-            });
-        };
-        return fetch().catch(e => this.platform.log.error('Could not refresh state', e));
-    }
-    refreshCharacteristicValuesBasedOnCurrentState() {
-        this.lightService
-            .setCharacteristic(this.platform.Characteristic.Name, this.currentState.info.name)
-            .setCharacteristic(this.platform.Characteristic.On, this.currentState.state.on ? 1 : 0);
+        this.client = new WLEDClient_1.default(this.device.ip, this.platform.log);
+        this.client.onStateChange = this.onWLEDStateChange.bind(this);
+        this.client.loadCurrentState();
     }
     initializeService() {
         this.platform.log.info('Adding Lightbulb service');
@@ -66,41 +36,27 @@ class LightAccessory {
             .on('set', this.setBrightness.bind(this))
             .on('get', this.getBrightness.bind(this));
     }
+    onWLEDStateChange(currentState) {
+        this.lightService
+            .setCharacteristic(this.platform.Characteristic.Name, currentState.info.name)
+            .setCharacteristic(this.platform.Characteristic.On, currentState.state.on ? 1 : 0);
+    }
     async setPower(value, callback) {
-        this.platform.log.info('setPower called with: ' + value);
-        callback(null);
-        try {
-            await axios_1.default.post(this.baseURL, {
-                on: value === 1,
-            });
-        }
-        catch (e) {
-            this.platform.log.error(e);
-        }
+        const result = await this.client.setPower(value === 1);
+        callback(result);
     }
     async getPower(callback) {
-        this.platform.log.info('getPower called');
-        await this.loadCurrentState();
-        callback(null, this.currentState.state.on ? 1 : 0);
+        await this.client.loadCurrentState();
+        callback(null, this.client.currentState.state.on ? 1 : 0);
     }
     async setBrightness(value, callback) {
         const brightness = Math.round((value / 100) * 255);
-        this.platform.log.info(`setVolume called with: ${value}, calculated bri: ${brightness}`);
-        try {
-            await axios_1.default.post(this.baseURL, {
-                bri: brightness,
-            });
-            callback(null);
-        }
-        catch (e) {
-            this.platform.log.error(e);
-            callback(e);
-        }
+        const result = await this.client.setBrightness(brightness);
+        callback(result);
     }
     async getBrightness(callback) {
-        this.platform.log.info('getBrightness called');
-        await this.loadCurrentState();
-        callback(null, Math.round((this.currentState.state.bri / 255) * 100));
+        await this.client.loadCurrentState();
+        callback(null, Math.round((this.client.currentState.state.bri / 255) * 100));
     }
 }
 exports.LightAccessory = LightAccessory;

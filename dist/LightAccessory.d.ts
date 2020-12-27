@@ -14,12 +14,10 @@ export declare class LightAccessory {
     private readonly accessory;
     private lightService?;
     private readonly device;
-    private readonly baseURL;
-    private currentState;
+    private client;
     constructor(platform: Plugin, accessory: PlatformAccessory);
-    loadCurrentState(): Promise<unknown>;
-    refreshCharacteristicValuesBasedOnCurrentState(): void;
     initializeService(): void;
+    onWLEDStateChange(currentState: any): void;
     setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     getPower(callback: CharacteristicGetCallback): Promise<void>;
     setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
