@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f563ce23-2ee8-4970-ab6d-103db4c305da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/WLEDClient.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.schema.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.schema.json" afterDir="false" />
@@ -32,6 +31,7 @@
       <change beforePath="$PROJECT_DIR$/src/LightAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/LightAccessory.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Plugin.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TVAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/TVAccessory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/WLEDClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/WLEDClient.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +90,7 @@
       <workItem from="1603207203340" duration="1261000" />
       <workItem from="1603215673640" duration="58000" />
       <workItem from="1603221562170" duration="1917000" />
-      <workItem from="1608984006662" duration="19320000" />
+      <workItem from="1608984006662" duration="19424000" />
     </task>
     <servers />
   </component>

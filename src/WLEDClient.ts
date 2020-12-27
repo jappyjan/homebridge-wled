@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import {CharacteristicSetCallback, CharacteristicValue, Logger} from 'homebridge';
+import {Logger} from 'homebridge';
 
 export default class WLEDClient {
   public currentState: { [key: string]: any } = {};

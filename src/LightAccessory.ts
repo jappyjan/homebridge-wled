@@ -8,7 +8,6 @@ import {
 } from 'homebridge';
 
 import {Plugin} from './Plugin';
-import Axios from 'axios';
 import WLEDClient from './WLEDClient';
 
 export interface Device {
