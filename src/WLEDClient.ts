@@ -6,14 +6,17 @@ export default class WLEDClient {
   private readonly baseURL: string;
   private readonly log: Logger;
   public onStateChange: ((state: { [key: string]: any }) => any) | null = null;
+  private isSettingBrightness = false;
+  private briChangeVal: number | null = null;
 
   constructor(ip: string, logger: Logger) {
     this.log = logger;
     this.baseURL = `http://${ip}/json`;
-    this.loadCurrentState();
+
+    setInterval(() => this.loadCurrentState(), 1000);
   }
 
-  public loadCurrentState() {
+  private loadCurrentState() {
     let fetchCount = 0;
     const fetch = () => {
       fetchCount++;
@@ -65,6 +68,13 @@ export default class WLEDClient {
   }
 
   public async setBrightness(bri: number): Promise<null | Error> {
+    if (this.isSettingBrightness) {
+      this.briChangeVal = bri;
+      return null;
+    }
+
+    this.isSettingBrightness = true;
+
     try {
       await Axios.post(this.baseURL, {
         bri,
@@ -77,6 +87,12 @@ export default class WLEDClient {
     } catch (e) {
       this.log.error(e);
       return e;
+    } finally {
+      if (this.briChangeVal !== null) {
+        await this.setBrightness(this.briChangeVal as number);
+      }
+
+      this.briChangeVal = null;
     }
   }
 

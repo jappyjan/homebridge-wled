@@ -37,7 +37,6 @@ export class LightAccessory {
 
     this.client = new WLEDClient(this.device.ip, this.platform.log);
     this.client.onStateChange = this.onWLEDStateChange.bind(this);
-    this.client.loadCurrentState();
   }
 
   initializeService() {
@@ -78,7 +77,6 @@ export class LightAccessory {
   async getPower(
     callback: CharacteristicGetCallback,
   ): Promise<void> {
-    await this.client.loadCurrentState();
     callback(null, this.client.currentState.state.on ? 1 : 0);
   }
 
@@ -95,7 +93,6 @@ export class LightAccessory {
   async getBrightness(
     callback: CharacteristicGetCallback,
   ): Promise<void> {
-    await this.client.loadCurrentState();
     callback(null, Math.round((this.client.currentState.state.bri / 255) * 100));
   }
 }

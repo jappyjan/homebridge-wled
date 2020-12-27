@@ -10,6 +10,7 @@ export default class WLEDClient {
     }) => any) | null;
     constructor(ip: string, logger: Logger);
     loadCurrentState(): Promise<unknown>;
+    private emitStateChange;
     setPower(on: boolean): Promise<null | Error>;
     setBrightness(bri: number): Promise<null | Error>;
     setEffect(effectIndex: number): Promise<null | Error>;
