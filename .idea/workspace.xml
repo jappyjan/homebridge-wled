@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f563ce23-2ee8-4970-ab6d-103db4c305da" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/WLEDClient.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.schema.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.schema.json" afterDir="false" />
@@ -36,6 +37,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,7 +90,7 @@
       <workItem from="1603207203340" duration="1261000" />
       <workItem from="1603215673640" duration="58000" />
       <workItem from="1603221562170" duration="1917000" />
-      <workItem from="1608984006662" duration="17682000" />
+      <workItem from="1608984006662" duration="19320000" />
     </task>
     <servers />
   </component>
