@@ -38,7 +38,7 @@ class LightAccessory {
     }
     onWLEDStateChange(currentState) {
         this.lightService
-            .setCharacteristic(this.platform.Characteristic.Name, currentState.info.name)
+            .setCharacteristic(this.platform.Characteristic.Name, currentState.info.name + ' (CLR/BRI)')
             .setCharacteristic(this.platform.Characteristic.On, currentState.state.on ? 1 : 0);
     }
     async setPower(value, callback) {

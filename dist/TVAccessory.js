@@ -22,7 +22,7 @@ class TVAccessory {
         this.client.loadCurrentState();
     }
     onWLEDStateChange(currentState) {
-        this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, currentState.info.name);
+        this.televisionService.setCharacteristic(this.platform.Characteristic.ConfiguredName, currentState.info.name + ' (FX)');
         this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, currentState.state.seg[0].fx);
         this.televisionService.setCharacteristic(this.platform.Characteristic.Active, currentState.state.on ? 1 : 0);
     }

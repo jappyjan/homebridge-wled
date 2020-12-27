@@ -87,10 +87,7 @@ export class TVAccessory {
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
-      .on('set', async (value, callback) => {
-        const result = await this.client.setEffect(value);
-        callback(result);
-      });
+      .on('set', this.setInputSource.bind(this));
 
     const INPUT_SOURCES_LIMIT = 45;
     const availableInputServices: Service[] = [];
@@ -151,6 +148,7 @@ export class TVAccessory {
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): Promise<void> {
+    this.platform.log.info(`Set Power to ${value} via TV`);
     const result = await this.client.setPower(value === 1);
     callback(result);
   }
@@ -160,5 +158,11 @@ export class TVAccessory {
   ): Promise<void> {
     await this.client.loadCurrentState();
     callback(null, this.client.currentState.state.on ? 1 : 0);
+  }
+
+  async setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback) {
+    this.platform.log.info(`Set Effect to ${value} via TV`);
+    const result = await this.client.setEffect(value as number);
+    callback(result);
   }
 }

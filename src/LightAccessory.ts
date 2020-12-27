@@ -70,6 +70,7 @@ export class LightAccessory {
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): Promise<void> {
+    this.platform.log.info(`Set Power to ${value} via Lightbulb`);
     const result = await this.client.setPower(value === 1);
     callback(result);
   }
@@ -86,6 +87,7 @@ export class LightAccessory {
     callback: CharacteristicSetCallback,
   ): Promise<void> {
     const brightness = Math.round((value as number / 100) * 255);
+    this.platform.log.info(`Set Brightness to ${brightness} via Lightbulb`);
     const result = await this.client.setBrightness(brightness);
     callback(result);
   }
