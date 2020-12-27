@@ -71,7 +71,7 @@ export class LightAccessory {
     callback: CharacteristicSetCallback,
   ): Promise<void> {
     this.platform.log.info(`Set Power to ${value} via Lightbulb`);
-    const result = await this.client.setPower(value === 1);
+    const result = await this.client.setPower(value as boolean);
     callback(result);
   }
 

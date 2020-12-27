@@ -22,5 +22,6 @@ export declare class TVAccessory {
     private configureInputSources;
     setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
     getPower(callback: CharacteristicGetCallback): Promise<void>;
+    setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
 }
 //# sourceMappingURL=TVAccessory.d.ts.map

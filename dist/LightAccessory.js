@@ -42,6 +42,7 @@ class LightAccessory {
             .setCharacteristic(this.platform.Characteristic.On, currentState.state.on ? 1 : 0);
     }
     async setPower(value, callback) {
+        this.platform.log.info(`Set Power to ${value} via Lightbulb`);
         const result = await this.client.setPower(value === 1);
         callback(result);
     }
@@ -51,6 +52,7 @@ class LightAccessory {
     }
     async setBrightness(value, callback) {
         const brightness = Math.round((value / 100) * 255);
+        this.platform.log.info(`Set Brightness to ${brightness} via Lightbulb`);
         const result = await this.client.setBrightness(brightness);
         callback(result);
     }
