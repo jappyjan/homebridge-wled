@@ -54,8 +54,8 @@ export class TVAccessory {
     this.televisionService
       .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'WLED (FX)');
 
-    this.client.on('change:fx', fx => {
-      this.televisionService?.setCharacteristic(this.platform.Characteristic.ConfiguredName, fx);
+    this.client.on('change:displayName', name => {
+      this.televisionService!.setCharacteristic(this.platform.Characteristic.ConfiguredName, `${name} (FX)`);
     });
 
     this.televisionService.setCharacteristic(
@@ -84,6 +84,10 @@ export class TVAccessory {
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
       .on('set', this.setInputSource.bind(this));
+
+    this.client.on('change:fx', fx => {
+      this.televisionService?.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, fx);
+    });
 
     // create dummy inputs
     for (let i = 0; i < INPUT_SOURCES_LIMIT; i++) {

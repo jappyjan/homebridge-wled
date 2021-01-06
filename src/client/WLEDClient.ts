@@ -35,10 +35,11 @@ export class WLEDClient extends EventEmitter {
   private readonly client: Client;
   private readonly log: Logger;
   private readonly topic: string;
-  private colorState = {
+  private state = {
     hue: 0,
     saturation: 0,
     brightness: 0,
+    fx: 0,
   };
 
   constructor(props: WLEDClientOptions) {
@@ -88,6 +89,7 @@ export class WLEDClient extends EventEmitter {
     const newFx = effects[newFxIndex];
     if (newFx) {
       this.emit('change:fx', newFx);
+      this.state.fx = newFxIndex;
     }
 
     const newBrightness = message.vs.ac[0];
@@ -117,22 +119,23 @@ export class WLEDClient extends EventEmitter {
   }
 
   public setBrightness(brightness: number) {
-    this.colorState.brightness = brightness;
+    this.state.brightness = brightness;
     this.updateColor();
+    this.client.publish(this.topic, brightness.toString());
   }
 
   public setHue(value: number) {
-    this.colorState.hue = value;
+    this.state.hue = value;
     this.updateColor();
   }
 
   public setSaturation(value: number) {
-    this.colorState.saturation = value;
+    this.state.saturation = value;
     this.updateColor();
   }
 
   private updateColor() {
-    const rgbw = hsv2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
+    const rgbw = hsv2rgb(this.state.hue, this.state.saturation, this.state.brightness);
     const hexColor = rgbToHex(rgbw);
 
     this.log.info(`Setting color to: rgbw: ${JSON.stringify(rgbw)}, hex: ${hexColor}`);
