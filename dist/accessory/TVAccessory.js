@@ -43,6 +43,9 @@ class TVAccessory {
         this.televisionService
             .getCharacteristic(this.platform.Characteristic.Active)
             .on('set', this.setPower.bind(this));
+        this.client.on('change:power', isOn => {
+            this.televisionService.setCharacteristic(this.platform.Characteristic.Active, isOn);
+        });
         this.configureInputSources();
     }
     configureInputSources() {

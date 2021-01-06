@@ -35,6 +35,9 @@ class LightAccessory {
         this.lightService
             .getCharacteristic(this.platform.Characteristic.On)
             .on('set', this.setPower.bind(this));
+        this.client.on('change:power', isOn => {
+            this.lightService.setCharacteristic(this.platform.Characteristic.On, isOn);
+        });
         this.lightService
             .getCharacteristic(this.platform.Characteristic.Brightness)
             .on('set', this.setBrightness.bind(this));

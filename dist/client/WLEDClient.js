@@ -52,6 +52,7 @@ class WLEDClient extends events_1.EventEmitter {
         const newBrightness = message.vs.ac[0];
         if (newBrightness) {
             this.emit('change:brightness', newBrightness);
+            this.emit('change:power', newBrightness !== 0);
         }
         // this.log.debug('api change', JSON.stringify(message, null, 4));
     }

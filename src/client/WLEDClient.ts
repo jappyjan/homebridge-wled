@@ -16,6 +16,7 @@ interface WLEDClientEvents {
   'change:displayName': (newName: string) => void;
   'change:fx': (newFx: string) => void;
   'change:brightness': (newBrightness: number) => void;
+  'change:power': (isOn: boolean) => void;
 }
 
 export declare interface WLEDClient {
@@ -90,6 +91,7 @@ export class WLEDClient extends EventEmitter {
     const newBrightness = message.vs.ac[0];
     if (newBrightness) {
       this.emit('change:brightness', newBrightness);
+      this.emit('change:power', newBrightness !== 0);
     }
 
     // this.log.debug('api change', JSON.stringify(message, null, 4));
