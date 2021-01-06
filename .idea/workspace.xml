@@ -19,40 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f563ce23-2ee8-4970-ab6d-103db4c305da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Device.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/WLEDClient.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/effects.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/colors.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.schema.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.schema.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/LightAccessory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/LightAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/LightAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/LightAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/LightAccessory.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugin.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugin.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugin.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugin.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugin.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugin.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/TVAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/TVAccessory.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/WLEDClient.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/WLEDClient.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/WLEDClient.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/WLEDClient.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/WLEDClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/WLEDClient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/WLEDClient.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/WLEDClient.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LightAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/accessory/LightAccessory.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin/Plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TVAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/accessory/TVAccessory.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/WLEDClient.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="f563ce23-2ee8-4970-ab6d-103db4c305da" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +85,7 @@
       <workItem from="1603221562170" duration="1917000" />
       <workItem from="1608984006662" duration="21167000" />
       <workItem from="1609181929664" duration="11000" />
-      <workItem from="1609880494634" duration="11949000" />
+      <workItem from="1609880494634" duration="12302000" />
     </task>
     <servers />
   </component>
