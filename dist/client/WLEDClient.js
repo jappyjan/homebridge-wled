@@ -9,10 +9,11 @@ const colors_1 = require("../utils/colors");
 class WLEDClient extends events_1.EventEmitter {
     constructor(props) {
         super();
-        this.colorState = {
+        this.state = {
             hue: 0,
             saturation: 0,
             brightness: 0,
+            fx: 0,
         };
         this.log = props.logger;
         this.topic = props.topic;
@@ -48,6 +49,7 @@ class WLEDClient extends events_1.EventEmitter {
         const newFx = effects_1.effects[newFxIndex];
         if (newFx) {
             this.emit('change:fx', newFx);
+            this.state.fx = newFxIndex;
         }
         const newBrightness = message.vs.ac[0];
         if (newBrightness) {
@@ -68,19 +70,20 @@ class WLEDClient extends events_1.EventEmitter {
         this.client.publish(this.topic + '/api', 'FX=' + effectIndex);
     }
     setBrightness(brightness) {
-        this.colorState.brightness = brightness;
+        this.state.brightness = brightness;
         this.updateColor();
+        this.client.publish(this.topic, brightness.toString());
     }
     setHue(value) {
-        this.colorState.hue = value;
+        this.state.hue = value;
         this.updateColor();
     }
     setSaturation(value) {
-        this.colorState.saturation = value;
+        this.state.saturation = value;
         this.updateColor();
     }
     updateColor() {
-        const rgbw = colors_1.hsv2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
+        const rgbw = colors_1.hsv2rgb(this.state.hue, this.state.saturation, this.state.brightness);
         const hexColor = colors_1.rgbToHex(rgbw);
         this.log.info(`Setting color to: rgbw: ${JSON.stringify(rgbw)}, hex: ${hexColor}`);
         this.client.publish(this.topic + '/col', hexColor);

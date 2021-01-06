@@ -54,6 +54,9 @@ export class LightAccessory {
       this.accessory.addService(this.platform.Service.Lightbulb);
 
     this.lightService.setCharacteristic(this.platform.Characteristic.Name, 'WLED (CLR/BRI)');
+    this.client.on('change:displayName', name => {
+      this.lightService!.setCharacteristic(this.platform.Characteristic.Name, `${name} (CLR/BRI)`);
+    });
 
     this.lightService
       .getCharacteristic(this.platform.Characteristic.On)

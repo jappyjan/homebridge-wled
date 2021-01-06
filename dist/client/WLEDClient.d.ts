@@ -23,7 +23,7 @@ export declare class WLEDClient extends EventEmitter {
     private readonly client;
     private readonly log;
     private readonly topic;
-    private colorState;
+    private state;
     constructor(props: WLEDClientOptions);
     private handleApiResponseMessage;
     setPower(on: boolean): void;
