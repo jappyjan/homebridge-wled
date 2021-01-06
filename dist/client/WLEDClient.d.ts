@@ -12,6 +12,8 @@ interface WLEDClientEvents {
     'change:fx': (newFx: string) => void;
     'change:brightness': (newBrightness: number) => void;
     'change:power': (isOn: boolean) => void;
+    'change:hue': (newHue: number) => void;
+    'change:saturation': (newSaturation: number) => void;
 }
 export declare interface WLEDClient {
     on<U extends keyof WLEDClientEvents>(event: U, listener: WLEDClientEvents[U]): this;

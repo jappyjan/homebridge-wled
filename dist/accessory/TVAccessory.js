@@ -14,6 +14,9 @@ class TVAccessory {
         this.platform = platform;
         this.accessory = accessory;
         this.availableInputServices = [];
+        this.isSetting = {
+            power: false,
+        };
         accessory.category = 26 /* SPEAKER */;
         this.device = accessory.context.device;
         this.log = {
@@ -44,6 +47,8 @@ class TVAccessory {
             .getCharacteristic(this.platform.Characteristic.Active)
             .on('set', this.setPower.bind(this));
         this.client.on('change:power', isOn => {
+            this.isSetting.power = true;
+            setTimeout(() => this.isSetting.power = false, 500);
             this.televisionService.setCharacteristic(this.platform.Characteristic.Active, isOn);
         });
         this.configureInputSources();
@@ -104,6 +109,9 @@ class TVAccessory {
         callback(null);
     }
     setPower(value, callback) {
+        if (this.isSetting.power) {
+            return;
+        }
         this.log.info(`Set Power to ${value} via TV`);
         this.client.setPower(value === 1);
         callback(null);

@@ -3,7 +3,7 @@ import {Client, connect as MQTTConnect} from 'mqtt';
 import {parseStringPromise as parseXml} from 'xml2js';
 import {EventEmitter} from 'events';
 import {effects} from './effects';
-import {hsb2rgb, rgbToHex} from '../utils/colors';
+import {hsb2rgb, rgb2Hsl, rgbToHex} from '../utils/colors';
 
 interface WLEDClientOptions {
   topic: string;
@@ -17,6 +17,8 @@ interface WLEDClientEvents {
   'change:fx': (newFx: string) => void;
   'change:brightness': (newBrightness: number) => void;
   'change:power': (isOn: boolean) => void;
+  'change:hue': (newHue: number) => void;
+  'change:saturation': (newSaturation: number) => void;
 }
 
 export declare interface WLEDClient {
@@ -93,6 +95,11 @@ export class WLEDClient extends EventEmitter {
       this.emit('change:brightness', newBrightness);
       this.emit('change:power', newBrightness !== 0);
     }
+
+    const [newRed, newGreen, newBlue] = message.vs.cl;
+    this.colorState = rgb2Hsl(newRed, newGreen, newBlue);
+    this.emit('change:hue', this.colorState.hue);
+    this.emit('change:saturation', this.colorState.saturation);
 
     // this.log.debug('api change', JSON.stringify(message, null, 4));
   }

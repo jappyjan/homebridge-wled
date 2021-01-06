@@ -13,6 +13,7 @@ export declare class LightAccessory {
     private client;
     private readonly log;
     private static instanceCount;
+    private isSetting;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     initializeService(): void;
     private setPower;

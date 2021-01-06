@@ -54,6 +54,10 @@ class WLEDClient extends events_1.EventEmitter {
             this.emit('change:brightness', newBrightness);
             this.emit('change:power', newBrightness !== 0);
         }
+        const [newRed, newGreen, newBlue] = message.vs.cl;
+        this.colorState = colors_1.rgb2Hsl(newRed, newGreen, newBlue);
+        this.emit('change:hue', this.colorState.hue);
+        this.emit('change:saturation', this.colorState.saturation);
         // this.log.debug('api change', JSON.stringify(message, null, 4));
     }
     setPower(on) {

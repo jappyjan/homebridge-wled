@@ -19,6 +19,9 @@ export class TVAccessory {
   private readonly availableInputServices: Service[] = [];
   private readonly log: Logger;
   private static instanceCount = 0;
+  private isSetting = {
+    power: false,
+  };
 
   constructor(
     private readonly platform: Plugin,
@@ -65,6 +68,8 @@ export class TVAccessory {
       .on('set', this.setPower.bind(this));
 
     this.client.on('change:power', isOn => {
+      this.isSetting.power = true;
+      setTimeout(() => this.isSetting.power = false, 500);
       this.televisionService!.setCharacteristic(this.platform.Characteristic.Active, isOn);
     });
 
@@ -149,6 +154,9 @@ export class TVAccessory {
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
   ): void {
+    if (this.isSetting.power) {
+      return;
+    }
     this.log.info(`Set Power to ${value} via TV`);
     this.client.setPower(value === 1);
     callback(null);

@@ -58,6 +58,44 @@ export function hsb2rgb(hue: number, saturation: number, brightness: number): RG
   return rgb;
 }
 
+export function rgb2Hsl(red: number, green: number, blue: number) {
+  red /= 255;
+  green /= 255;
+  blue /= 255;
+
+  const maxColorValue = Math.max(red, green, blue);
+  const minColorValue = Math.min(red, green, blue);
+
+  const brightness = (maxColorValue + minColorValue) / 2;
+
+  if (maxColorValue === minColorValue) {
+    return {hue: 0, saturation: 0, brightness};
+  }
+
+  const colorValueRange = maxColorValue - minColorValue;
+  let saturation = colorValueRange / (maxColorValue + minColorValue);
+  if (brightness > 0.5) {
+    saturation = colorValueRange / (2 - maxColorValue - minColorValue);
+  }
+
+  let hue = (maxColorValue + minColorValue) / 2;
+  switch (maxColorValue) {
+    case red:
+      hue = (green - blue) / colorValueRange + (green < blue ? 6 : 0);
+      break;
+    case green:
+      hue = (blue - red) / colorValueRange + 2;
+      break;
+    case blue:
+      hue = (red - green) / colorValueRange + 4;
+      break;
+  }
+
+  hue /= 6;
+
+  return {hue, saturation, brightness};
+}
+
 function decimalToHex(decimal: number) {
   const hex = decimal.toString(16);
   return hex.length === 1 ? '0' + hex : hex;
