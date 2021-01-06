@@ -48,13 +48,13 @@ class Plugin {
         }
     }
     getUid(device) {
-        return this.api.hap.uuid.generate(`jappyjan-wled_${device.ip}_${device.name}`);
+        return this.api.hap.uuid.generate(`jappyjan-wled_${device.topic.split('/').join('_')}`);
     }
     addAccessory(device) {
         // the accessory does not yet exist, so we need to create it
-        this.log.info('Adding new accessory:', device.name);
+        this.log.info('Adding new accessory - topic: ', device.topic);
         // create a new accessory
-        const accessory = new this.api.platformAccessory(device.name, this.getUid(device), 31 /* TELEVISION */);
+        const accessory = new this.api.platformAccessory(device.topic, this.getUid(device), 31 /* TELEVISION */);
         // store a copy of the device object in the `accessory.context`
         // the `context` property can be used to store any data about the accessory you may need
         accessory.context.device = device;

@@ -5,23 +5,29 @@
   "schema": {
     "type": "object",
     "properties": {
+      "host": {
+        "title": "MQTT Host",
+        "type": "string",
+        "required": true,
+        "format": "hostname",
+        "default": "localhost"
+      },
+      "port": {
+        "title": "MQTT Port",
+        "type": "number",
+        "required": true,
+        "default": 1883
+      },
       "devices": {
         "type": "array",
         "items": {
           "title": "WLED Devices",
           "type": "object",
           "properties": {
-            "name": {
-              "title": "Name",
+            "topic": {
+              "title": "WLED MQTT Topic",
               "type": "string",
-              "required": true,
-              "default": "WLED"
-            },
-            "ip": {
-              "title": "WLED IP-Address/Hostname",
-              "type": "string",
-              "required": true,
-              "format": "hostname"
+              "required": true
             },
             "effects": {
               "title": "Effects (Numeric) you want to use (upto 45) comma separated",

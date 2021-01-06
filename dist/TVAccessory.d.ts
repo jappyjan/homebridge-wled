@@ -1,10 +1,5 @@
-import { CharacteristicGetCallback, CharacteristicSetCallback, CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { Plugin } from './Plugin';
-export interface Device {
-    name: string;
-    ip: string;
-    effects: string;
-}
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -18,13 +13,15 @@ export declare class TVAccessory {
     private readonly client;
     private readonly availableInputServices;
     private effectNamesLoaded;
+    private readonly log;
+    private static instanceCount;
     constructor(platform: Plugin, accessory: PlatformAccessory);
-    private onWLEDStateChange;
     private initializeService;
     private configureInputSources;
+    private setInputSource;
+    private getInputSource;
     private setEffectNames;
-    setPower(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
-    getPower(callback: CharacteristicGetCallback): Promise<void>;
-    setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void>;
+    private setPower;
+    private getPower;
 }
 //# sourceMappingURL=TVAccessory.d.ts.map

@@ -1,8 +1,9 @@
 import {API, Categories, Characteristic, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service} from 'homebridge';
 
-import {PLATFORM_NAME, PLUGIN_NAME} from './settings';
-import {TVAccessory, Device} from './TVAccessory';
-import {LightAccessory} from './LightAccessory';
+import {PLATFORM_NAME, PLUGIN_NAME} from '../settings';
+import {TVAccessory} from '../accessory/TVAccessory';
+import {LightAccessory} from '../accessory/LightAccessory';
+import {Device} from '../Device';
 
 export class Plugin implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -58,17 +59,17 @@ export class Plugin implements DynamicPlatformPlugin {
 
   getUid(device: Device) {
     return this.api.hap.uuid.generate(
-      `jappyjan-wled_${device.ip}_${device.name}`,
+      `jappyjan-wled_${device.topic.split('/').join('_')}`,
     );
   }
 
   addAccessory(device: Device) {
     // the accessory does not yet exist, so we need to create it
-    this.log.info('Adding new accessory:', device.name);
+    this.log.info('Adding new accessory - topic: ', device.topic);
 
     // create a new accessory
     const accessory = new this.api.platformAccessory(
-      device.name,
+      device.topic,
       this.getUid(device),
       Categories.TELEVISION,
     );

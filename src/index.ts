@@ -1,5 +1,5 @@
 import {API} from 'homebridge';
-import {Plugin} from './Plugin';
+import {Plugin} from './plugin/Plugin';
 import {PLATFORM_NAME} from './settings';
 
 /**

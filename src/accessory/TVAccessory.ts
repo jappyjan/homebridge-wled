@@ -1,20 +1,9 @@
-import {
-  Categories,
-  CharacteristicGetCallback,
-  CharacteristicSetCallback,
-  CharacteristicValue,
-  PlatformAccessory,
-  Service,
-} from 'homebridge';
+import {Categories, CharacteristicSetCallback, CharacteristicValue, Logger, PlatformAccessory, Service} from 'homebridge';
 
-import {Plugin} from './Plugin';
-import WLEDClient from './WLEDClient';
-
-export interface Device {
-  name: string;
-  ip: string;
-  effects: string;
-}
+import {Plugin} from '../plugin/Plugin';
+import {WLEDClient} from '../client/WLEDClient';
+import {Device} from '../Device';
+import {effects} from '../client/effects';
 
 const INPUT_SOURCES_LIMIT = 45;
 
@@ -28,7 +17,8 @@ export class TVAccessory {
   private readonly device: Device;
   private readonly client: WLEDClient;
   private readonly availableInputServices: Service[] = [];
-  private effectNamesLoaded = false;
+  private readonly log: Logger;
+  private static instanceCount = 0;
 
   constructor(
     private readonly platform: Plugin,
@@ -37,29 +27,20 @@ export class TVAccessory {
     accessory.category = Categories.SPEAKER;
     this.device = accessory.context.device;
 
-    this.client = new WLEDClient(this.device.ip, this.platform.log);
+    this.log = {
+      ...platform.log,
+      prefix: platform.log.prefix + '--tv-' + TVAccessory.instanceCount,
+    } as Logger;
+    TVAccessory.instanceCount++;
+
+    this.client = new WLEDClient({
+      host: this.platform.config.host as string,
+      port: this.platform.config.port as number,
+      topic: this.device.topic,
+      logger: this.log,
+    });
 
     this.initializeService();
-    this.client.onStateChange = this.onWLEDStateChange.bind(this);
-  }
-
-  private onWLEDStateChange(currentState: any) {
-    this.televisionService!.setCharacteristic(
-      this.platform.Characteristic.ConfiguredName,
-      currentState.info.name + ' (FX)',
-    );
-
-    this.televisionService!.setCharacteristic(
-      this.platform.Characteristic.ActiveIdentifier,
-      currentState.state.seg[0].fx,
-    );
-
-    this.televisionService!.setCharacteristic(
-      this.platform.Characteristic.Active,
-      currentState.state.on ? 1 : 0,
-    );
-
-    this.setEffectNames(this.client.currentState.effects);
   }
 
   private initializeService() {
@@ -68,17 +49,20 @@ export class TVAccessory {
       this.accessory.addService(this.platform.Service.Television);
 
     this.televisionService
-      .setCharacteristic(this.platform.Characteristic.ConfiguredName, this.device.name);
+      .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'WLED (FX)');
 
-    this.televisionService
-      .getCharacteristic(this.platform.Characteristic.Active)
-      .on('set', this.setPower.bind(this))
-      .on('get', this.getPower.bind(this));
+    this.client.on('change:fx', fx => {
+      this.televisionService?.setCharacteristic(this.platform.Characteristic.ConfiguredName, fx);
+    });
 
     this.televisionService.setCharacteristic(
       this.platform.Characteristic.SleepDiscoveryMode,
       this.platform.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE,
     );
+
+    this.televisionService
+      .getCharacteristic(this.platform.Characteristic.Active)
+      .on('set', this.setPower.bind(this));
 
     this.configureInputSources();
   }
@@ -87,8 +71,6 @@ export class TVAccessory {
     if (!this.televisionService) {
       return;
     }
-
-    this.televisionService.setCharacteristic(this.platform.Characteristic.ActiveIdentifier, 1);
 
     // handle input source changes
     this.televisionService.getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
@@ -112,28 +94,36 @@ export class TVAccessory {
 
       this.availableInputServices.push(dummyInputSource);
     }
+
+    this.setEffectNames();
   }
 
-  private setEffectNames (effects: string[]) {
-    if (this.effectNamesLoaded) {
-      return;
+  private setEffectNames() {
+    // noinspection SuspiciousTypeOfGuard
+    if (typeof this.device.effects !== 'string') {
+      this.device.effects = '';
     }
 
-    const wantedEffects = (this.device.effects || '').split(',')
+    const wantedEffects = this.device.effects.split(',')
+      .filter(s => s.trim() !== '')
       .map(id => Number(id.trim()))
       .filter(id => !Number.isNaN(id));
 
+    this.log.info(`wanted effects: ${wantedEffects.join(', ')}`);
+
     effects.forEach((effectName, index) => {
-      if (!wantedEffects.includes(index)) {
+      if (wantedEffects.length > 0 && !wantedEffects.includes(index)) {
         return;
       }
 
       const service = this.availableInputServices.shift();
 
       if (!service) {
-        this.platform.log.error(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
+        this.log.warn(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
         return;
       }
+
+      this.log.info(`Adding Effect ${effectName} as Input Source`);
 
       service
         .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
@@ -145,24 +135,18 @@ export class TVAccessory {
     });
   }
 
-  async setPower(
+  private setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback) {
+    this.log.info(`Set Effect to ${value} via TV`);
+    this.client.setEffect(value as number);
+    callback(null);
+  }
+
+  private setPower(
     value: CharacteristicValue,
     callback: CharacteristicSetCallback,
-  ): Promise<void> {
-    this.platform.log.info(`Set Power to ${value} via TV`);
-    const result = await this.client.setPower(value === 1);
-    callback(result);
-  }
-
-  async getPower(
-    callback: CharacteristicGetCallback,
-  ): Promise<void> {
-    callback(null, this.client.currentState.state.on ? 1 : 0);
-  }
-
-  async setInputSource(value: CharacteristicValue, callback: CharacteristicSetCallback) {
-    this.platform.log.info(`Set Effect to ${value} via TV`);
-    const result = await this.client.setEffect(value as number);
-    callback(result);
+  ): void {
+    this.log.info(`Set Power to ${value} via TV`);
+    this.client.setPower(value === 1);
+    callback(null);
   }
 }
