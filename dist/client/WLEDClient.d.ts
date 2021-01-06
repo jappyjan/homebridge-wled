@@ -10,8 +10,8 @@ interface WLEDClientOptions {
 interface WLEDClientEvents {
     'change:displayName': (newName: string) => void;
     'change:fx': (newFx: string) => void;
-    'change:brightness': (newBrightness: number) => void;
     'change:power': (isOn: boolean) => void;
+    'change:brightness': (newBrightness: number) => void;
     'change:hue': (newHue: number) => void;
     'change:saturation': (newSaturation: number) => void;
 }

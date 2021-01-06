@@ -3,7 +3,7 @@ import {Client, connect as MQTTConnect} from 'mqtt';
 import {parseStringPromise as parseXml} from 'xml2js';
 import {EventEmitter} from 'events';
 import {effects} from './effects';
-import {hsb2rgb, rgb2Hsl, rgbToHex} from '../utils/colors';
+import {hsv2rgb, rgb2Hsl, rgbToHex} from '../utils/colors';
 
 interface WLEDClientOptions {
   topic: string;
@@ -15,8 +15,8 @@ interface WLEDClientOptions {
 interface WLEDClientEvents {
   'change:displayName': (newName: string) => void;
   'change:fx': (newFx: string) => void;
-  'change:brightness': (newBrightness: number) => void;
   'change:power': (isOn: boolean) => void;
+  'change:brightness': (newBrightness: number) => void;
   'change:hue': (newHue: number) => void;
   'change:saturation': (newSaturation: number) => void;
 }
@@ -96,10 +96,10 @@ export class WLEDClient extends EventEmitter {
       this.emit('change:power', newBrightness !== 0);
     }
 
-    const [newRed, newGreen, newBlue] = message.vs.cl;
-    this.colorState = rgb2Hsl(newRed, newGreen, newBlue);
-    this.emit('change:hue', this.colorState.hue);
-    this.emit('change:saturation', this.colorState.saturation);
+    // const [newRed, newGreen, newBlue] = message.vs.cl;
+    // this.colorState = rgb2Hsl(newRed, newGreen, newBlue);
+    // this.emit('change:hue', this.colorState.hue);
+    // this.emit('change:saturation', this.colorState.saturation);
 
     // this.log.debug('api change', JSON.stringify(message, null, 4));
   }
@@ -132,7 +132,7 @@ export class WLEDClient extends EventEmitter {
   }
 
   private updateColor() {
-    const rgbw = hsb2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
+    const rgbw = hsv2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
     const hexColor = rgbToHex(rgbw);
 
     this.log.info(`Setting color to: rgbw: ${JSON.stringify(rgbw)}, hex: ${hexColor}`);

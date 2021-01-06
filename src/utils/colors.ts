@@ -4,7 +4,7 @@ type RGB = {
   B: number;
 };
 
-export function hsb2rgb(hue: number, saturation: number, brightness: number): RGB {
+export function hsv2rgb(hue: number, saturation: number, brightness: number): RGB {
   if (hue === 0 && saturation === 0) {
     return {
       R: brightness,

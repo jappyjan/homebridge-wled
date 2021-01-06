@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rgbToHex = exports.rgb2Hsl = exports.hsb2rgb = void 0;
-function hsb2rgb(hue, saturation, brightness) {
+exports.rgbToHex = exports.rgb2Hsl = exports.hsv2rgb = void 0;
+function hsv2rgb(hue, saturation, brightness) {
     if (hue === 0 && saturation === 0) {
         return {
             R: brightness,
@@ -45,7 +45,7 @@ function hsb2rgb(hue, saturation, brightness) {
     }
     return rgb;
 }
-exports.hsb2rgb = hsb2rgb;
+exports.hsv2rgb = hsv2rgb;
 function rgb2Hsl(red, green, blue) {
     red /= 255;
     green /= 255;

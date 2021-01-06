@@ -54,10 +54,10 @@ class WLEDClient extends events_1.EventEmitter {
             this.emit('change:brightness', newBrightness);
             this.emit('change:power', newBrightness !== 0);
         }
-        const [newRed, newGreen, newBlue] = message.vs.cl;
-        this.colorState = colors_1.rgb2Hsl(newRed, newGreen, newBlue);
-        this.emit('change:hue', this.colorState.hue);
-        this.emit('change:saturation', this.colorState.saturation);
+        // const [newRed, newGreen, newBlue] = message.vs.cl;
+        // this.colorState = rgb2Hsl(newRed, newGreen, newBlue);
+        // this.emit('change:hue', this.colorState.hue);
+        // this.emit('change:saturation', this.colorState.saturation);
         // this.log.debug('api change', JSON.stringify(message, null, 4));
     }
     setPower(on) {
@@ -80,7 +80,7 @@ class WLEDClient extends events_1.EventEmitter {
         this.updateColor();
     }
     updateColor() {
-        const rgbw = colors_1.hsb2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
+        const rgbw = colors_1.hsv2rgb(this.colorState.hue, this.colorState.saturation, this.colorState.brightness);
         const hexColor = colors_1.rgbToHex(rgbw);
         this.log.info(`Setting color to: rgbw: ${JSON.stringify(rgbw)}, hex: ${hexColor}`);
         this.client.publish(this.topic + '/col', hexColor);
