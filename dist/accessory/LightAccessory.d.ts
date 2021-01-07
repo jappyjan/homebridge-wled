@@ -15,7 +15,7 @@ export declare class LightAccessory {
     private static instanceCount;
     private isSetting;
     constructor(platform: Plugin, accessory: PlatformAccessory);
-    initializeService(): void;
+    private initializeService;
     private setPower;
     private setBrightness;
     private setHue;

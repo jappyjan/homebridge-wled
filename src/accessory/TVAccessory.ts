@@ -95,7 +95,7 @@ export class TVAccessory {
 
       const dummyInputSource = new this.platform.Service.InputSource('dummy', `input_${inputId}`);
       dummyInputSource
-        .setCharacteristic(this.platform.Characteristic.Identifier, inputId)
+        .setCharacteristic(this.platform.Characteristic.Identifier, inputId * 1000)
         .setCharacteristic(this.platform.Characteristic.ConfiguredName, 'dummy')
         .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.NOT_CONFIGURED)
         .setCharacteristic(this.platform.Characteristic.TargetVisibilityState, this.platform.Characteristic.TargetVisibilityState.SHOWN)
@@ -124,15 +124,15 @@ export class TVAccessory {
 
     this.log.info(`wanted effects: ${wantedEffects.join(', ')}`);
 
-    effects.forEach((effectName, index) => {
-      if (wantedEffects.length > 0 && !wantedEffects.includes(index)) {
+    effects.forEach((effectName, effectIndex) => {
+      if (wantedEffects.length > 0 && !wantedEffects.includes(effectIndex)) {
         return;
       }
 
       const service = this.availableInputServices.shift();
 
       if (!service) {
-        this.log.warn(`Cannot map Effect ${effectName} (${index}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
+        this.log.warn(`Cannot map Effect ${effectName} (${effectIndex}), MAX of ${INPUT_SOURCES_LIMIT} reached`);
         return;
       }
 
@@ -140,6 +140,7 @@ export class TVAccessory {
 
       service
         .setCharacteristic(this.platform.Characteristic.ConfiguredName, effectName)
+        .setCharacteristic(this.platform.Characteristic.Identifier, effectIndex)
         .setCharacteristic(this.platform.Characteristic.IsConfigured, this.platform.Characteristic.IsConfigured.CONFIGURED)
         .setCharacteristic(
           this.platform.Characteristic.CurrentVisibilityState,

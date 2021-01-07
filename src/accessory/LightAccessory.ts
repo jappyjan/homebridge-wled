@@ -43,10 +43,9 @@ export class LightAccessory {
     });
 
     this.initializeService();
-
   }
 
-  initializeService() {
+  private initializeService() {
     this.log.info('Adding Lightbulb service');
 
     this.lightService =
@@ -104,6 +103,7 @@ export class LightAccessory {
     if (this.isSetting.power) {
       return;
     }
+
     this.log.info(`Set Power to ${value} via Lightbulb`);
     this.client.setPower(value as boolean);
     callback(null);

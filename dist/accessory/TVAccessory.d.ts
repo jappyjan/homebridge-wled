@@ -14,7 +14,6 @@ export declare class TVAccessory {
     private readonly availableInputServices;
     private readonly log;
     private static instanceCount;
-    private isSetting;
     constructor(platform: Plugin, accessory: PlatformAccessory);
     private initializeService;
     private configureInputSources;

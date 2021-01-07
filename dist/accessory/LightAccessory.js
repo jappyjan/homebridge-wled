@@ -38,6 +38,9 @@ class LightAccessory {
             this.accessory.getService(this.platform.Service.Lightbulb) ||
                 this.accessory.addService(this.platform.Service.Lightbulb);
         this.lightService.setCharacteristic(this.platform.Characteristic.Name, 'WLED (CLR/BRI)');
+        this.client.on('change:displayName', name => {
+            this.lightService.setCharacteristic(this.platform.Characteristic.Name, `${name} (CLR/BRI)`);
+        });
         this.lightService
             .getCharacteristic(this.platform.Characteristic.On)
             .on('set', this.setPower.bind(this));
@@ -51,8 +54,8 @@ class LightAccessory {
             .on('set', this.setBrightness.bind(this));
         this.client.on('change:brightness', brightness => {
             this.isSetting.brightness = true;
-            setTimeout(() => this.isSetting.brightness = false, 500);
-            this.lightService.setCharacteristic(this.platform.Characteristic.Brightness, brightness);
+            // setTimeout(() => this.isSetting.brightness = false, 500);
+            this.lightService.updateCharacteristic(this.platform.Characteristic.Brightness, brightness);
         });
         this.lightService.getCharacteristic(this.platform.Characteristic.Hue)
             .on('set', this.setHue.bind(this));

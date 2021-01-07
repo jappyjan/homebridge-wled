@@ -21,14 +21,17 @@
   <component name="ChangeListManager">
     <list default="true" id="f563ce23-2ee8-4970-ab6d-103db4c305da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/accessory/LightAccessory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/LightAccessory.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/accessory/LightAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/LightAccessory.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/accessory/LightAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/LightAccessory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/accessory/LightAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/LightAccessory.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/accessory/TVAccessory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/TVAccessory.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/accessory/TVAccessory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/TVAccessory.d.ts.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/accessory/TVAccessory.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/TVAccessory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/accessory/TVAccessory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/accessory/TVAccessory.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/client/WLEDClient.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/client/WLEDClient.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/client/WLEDClient.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/client/WLEDClient.d.ts.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/client/WLEDClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/client/WLEDClient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/client/WLEDClient.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/client/WLEDClient.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/accessory/LightAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/accessory/LightAccessory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/accessory/TVAccessory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/accessory/TVAccessory.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +47,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1iyVAduP6fxS7ZdFOk6v6X9rGXU" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -95,7 +106,8 @@
       <workItem from="1603221562170" duration="1917000" />
       <workItem from="1608984006662" duration="21167000" />
       <workItem from="1609181929664" duration="11000" />
-      <workItem from="1609880494634" duration="17663000" />
+      <workItem from="1609880494634" duration="17978000" />
+      <workItem from="1610042822553" duration="2647000" />
     </task>
     <servers />
   </component>
